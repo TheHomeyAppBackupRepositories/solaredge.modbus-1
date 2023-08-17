@@ -11,7 +11,24 @@ class Growatt extends homey_1.default.Device {
         this.holdingRegisters = {
             "exportlimitenabled": [122, 1, 'UINT16', "Export Limit enable", 0],
             "exportlimitpowerrate": [123, 1, 'UINT16', "Export Limit Power Rate", -1],
-            "exportlimitwhenfailed": [3000, 1, 'UINT16', "Export Limit when limit failed", -1]
+            "prioritychange": [1044, 1, 'UINT16', "Priority", 0],
+            "gridfirststopsoc": [1071, 1, 'UINT16', "GridFirst stop SOC", 0],
+            "batfirststopsoc": [1091, 1, 'UINT16', "BatFirst stop SOC", 0],
+            "acchargeswitch": [1092, 1, 'UINT16', "Batt AC charge switch", 0],
+            "gridfirststarttime1": [1080, 1, 'UINT16', "Grid First Start Time", 0],
+            "gridfirststoptime1": [1081, 1, 'UINT16', "Grid First Stop Time", 0],
+            "gridfirststopswitch1": [1082, 1, 'UINT16', "Grid First Stop Switch 1", 0],
+            "battfirststarttime1": [1100, 1, 'UINT16', "Battery First Start Time", 0],
+            "battfirststoptime1": [1101, 1, 'UINT16', "Battery First Stop Time", 0],
+            "battfirststopswitch1": [1102, 1, 'UINT16', "Battery First Stop Switch 1", 0],
+            "loadfirststarttime1": [1110, 1, 'UINT16', "Load First Start Time", 0],
+            "loadfirststoptime1": [1111, 1, 'UINT16', "Load First Stop Time", 0],
+            "loadfirststopswitch1": [1112, 1, 'UINT16', "Load First Stop Switch 1", 0]
+            // different inverter
+            // "gridfirststopsoc2":     [3037, 1, 'UINT16', "GridFirst stop SOC 2", 0],
+            // "batfirststopsoc2":      [3048, 1, 'UINT16', "BatFirst stop SOC 2", 0],
+            // "loadfirststopsocset":   [3082, 1, 'UINT16', "LoadFirst stop SOC set", 0],
+            // "exportlimitwhenfailed": [3000, 1, 'UINT16', "Export Limit when limit failed", -1]           
         };
         this.registers = {
             "l1_current": [39, 1, 'UINT16', "L1 Current", -1],
@@ -59,10 +76,10 @@ class Growatt extends homey_1.default.Device {
             "bmserror": [1085, 1, 'UINT16', "bms error", 0],
             "totalhouseload": [1037, 2, 'UINT32', "Total house Load", -1],
             "priority": [118, 1, 'UINT16', "priority", 0],
-            "pactouserr": [1015, 2, 'UINT32', "pac to user r", -1],
-            "pactousers": [1017, 2, 'UINT32', "pac to user s", -1],
-            "pactousert": [1019, 2, 'UINT32', "pac to user t", -1],
-            "pactousertotal": [1021, 2, 'UINT32', "pac to user total", -1],
+            // "pactouserr": [1015, 2, 'UINT32', "pac to user r", -1],
+            // "pactousers": [1017, 2, 'UINT32', "pac to user s", -1],
+            // "pactousert": [1019, 2, 'UINT32', "pac to user t", -1],
+            // "pactousertotal": [1021, 2, 'UINT32', "pac to user total", -1],
             "today_grid_import": [1044, 2, 'UINT32', "Today's Grid Import", -1],
             "total_grid_import": [1046, 2, 'UINT32', "Total Grid Import", -1],
             "today_grid_export": [1048, 2, 'UINT32', "Today's Grid Export", -1],
@@ -238,10 +255,16 @@ class Growatt extends homey_1.default.Device {
                 this.addCapability('priority');
                 this.setCapabilityValue('priority', result['priority'].value);
             }
-            if (result['totalhouseload'] && result['totalhouseload'].value != 'xxx' && this.hasCapability('measure_power.houseload')) {
-                this.addCapability('measure_power.houseload');
-                var totalhouseload = Number(result['totalhouseload'].value) * (Math.pow(10, Number(result['totalhouseload'].scale)));
-                this.setCapabilityValue('measure_power.houseload', totalhouseload);
+            try {
+                if (result['totalhouseload'] && result['totalhouseload'].value != 'xxx' && this.hasCapability('measure_power.houseload')) {
+                    this.addCapability('measure_power.houseload');
+                    var totalhouseload = Number(result['totalhouseload'].value) * (Math.pow(10, Number(result['totalhouseload'].scale)));
+                    this.setCapabilityValue('measure_power.houseload', totalhouseload);
+                }
+            }
+            catch (err) {
+                console.log("error with key: totalhouseload");
+                console.log(err);
             }
             if (result['today_grid_import'] && result['today_grid_import'].value != 'xxx' && this.hasCapability('meter_power.today_grid_import')) {
                 this.addCapability('meter_power.today_grid_import');
@@ -263,11 +286,149 @@ class Growatt extends homey_1.default.Device {
                 var today_battery_input_energy = Number(result['today_battery_input_energy'].value) * (Math.pow(10, Number(result['today_battery_input_energy'].scale)));
                 this.setCapabilityValue('meter_power.today_batt_input', today_battery_input_energy);
             }
-            if (result['today_load'] && result['today_load'].value != 'xxx' && this.hasCapability('meter_power.today_load')) {
-                this.addCapability('meter_power.today_load');
-                var today_load = Number(result['today_load'].value) * (Math.pow(10, Number(result['today_load'].scale)));
-                this.setCapabilityValue('meter_power.today_load', today_load);
+            try {
+                if (result['today_load'] && result['today_load'].value != 'xxx' && this.hasCapability('meter_power.today_load')) {
+                    this.addCapability('meter_power.today_load');
+                    var today_load = Number(result['today_load'].value) * (Math.pow(10, Number(result['today_load'].scale)));
+                    this.setCapabilityValue('meter_power.today_load', today_load);
+                }
             }
+            catch (err) {
+                console.log("error with key: today_load");
+                console.log(err);
+            }
+            if (result['gridfirststopsoc'] && result['gridfirststopsoc'].value != 'xxx' && this.hasCapability('batteryminsoc')) {
+                this.addCapability('batteryminsoc');
+                var soc = Number(result['gridfirststopsoc'].value);
+                this.setCapabilityValue('batteryminsoc', soc);
+            }
+            if (result['batfirststopsoc'] && result['batfirststopsoc'].value != 'xxx' && this.hasCapability('batterymaxsoc')) {
+                this.addCapability('batterymaxsoc');
+                var soc = Number(result['batfirststopsoc'].value);
+                this.setCapabilityValue('batterymaxsoc', soc);
+            }
+            if (result['acchargeswitch'] && result['acchargeswitch'].value != 'xxx' && this.hasCapability('battacchargeswitch')) {
+                this.addCapability('battacchargeswitch');
+                var acswitch = result['acchargeswitch'].value;
+                this.setCapabilityValue('battacchargeswitch', acswitch);
+            }
+            if (result['gridfirststarttime1'] && result['gridfirststarttime1'].value != 'xxx' && this.hasCapability('gridfirst1')) {
+                var value = Number(result['gridfirststarttime1'].value);
+                let lowVal = value & 0xFF;
+                let highval = (value >> 8) & 0xFF;
+                // console.log('gridfirststarttime1: hour ' + highval + ' min ' + lowVal );
+                var value2 = Number(result['gridfirststoptime1'].value);
+                let lowVal2 = value2 & 0xFF;
+                let highval2 = (value2 >> 8) & 0xFF;
+                // console.log('gridfirststoptime1: hour ' + highval2 + ' min ' + lowVal2 );
+                var value3 = result['gridfirststopswitch1'].value;
+                // console.log('gridfirststopswitch1: ' + value3);
+                console.log('gridfirst1 from: ' + highval.toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false
+                }) + ':' + lowVal.toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false
+                }) + ' ~ ' + highval2.toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false
+                }) + ':' + lowVal2.toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false
+                }) + ' state: ' + value3);
+                this.addCapability('gridfirst1');
+                this.setCapabilityValue('gridfirst1', highval.toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false
+                }) + ':' + lowVal.toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false
+                }) + ' ~ ' + highval2.toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false
+                }) + ':' + lowVal2.toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false
+                }) + ' state: ' + value3);
+            }
+            if (result['battfirststarttime1'] && result['battfirststarttime1'].value != 'xxx' && this.hasCapability('battfirst1')) {
+                var value = Number(result['battfirststarttime1'].value);
+                let lowVal = value & 0xFF;
+                let highval = (value >> 8) & 0xFF;
+                // console.log('battfirststarttime1: hour ' + highval + ' min ' + lowVal );
+                var value2 = Number(result['battfirststoptime1'].value);
+                let lowVal2 = value2 & 0xFF;
+                let highval2 = (value2 >> 8) & 0xFF;
+                // console.log('battfirststoptime1: hour ' + highval2 + ' min ' + lowVal2 );
+                var value3 = result['battfirststopswitch1'].value;
+                // console.log('battfirststopswitch1: ' + value3);
+                console.log('battfirst1 from: ' + highval.toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false
+                }) + ':' + lowVal.toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false
+                }) + ' ~ ' + highval2.toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false
+                }) + ':' + lowVal2.toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false
+                }) + ' state: ' + value3);
+                this.addCapability('battfirst1');
+                this.setCapabilityValue('battfirst1', highval.toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false
+                }) + ':' + lowVal.toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false
+                }) + ' ~ ' + highval2.toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false
+                }) + ':' + lowVal2.toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false
+                }) + ' state: ' + value3);
+            }
+            // if (result['loadfirststarttime1'] && result['loadfirststarttime1'].value != 'xxx' && this.hasCapability('loadfirst1')) {
+            //     var value = Number(result['loadfirststarttime1'].value);
+            //     let lowVal = value & 0xFF;
+            //     let highval = (value >> 8) & 0xFF;
+            //     // console.log('loadfirststarttime1: hour ' + highval + ' min ' + lowVal );
+            //     var value2 = Number(result['loadfirststoptime1'].value);
+            //     let lowVal2 = value2 & 0xFF;
+            //     let highval2 = (value2 >> 8) & 0xFF;
+            //     // console.log('loadfirststoptime1: hour ' + highval2 + ' min ' + lowVal2 );
+            //     var value3 = result['loadfirststopswitch1'].value;
+            //     // console.log('loadfirststopswitch1: ' + value3);
+            //     console.log('loadfirst1 from: ' + highval.toLocaleString('en-US', {
+            //         minimumIntegerDigits: 2,
+            //         useGrouping: false
+            //     }) + ':' + lowVal.toLocaleString('en-US', {
+            //         minimumIntegerDigits: 2,
+            //         useGrouping: false
+            //     }) + ' ~ ' + highval2.toLocaleString('en-US', {
+            //         minimumIntegerDigits: 2,
+            //         useGrouping: false
+            //     }) + ':' + lowVal2.toLocaleString('en-US', {
+            //         minimumIntegerDigits: 2,
+            //         useGrouping: false
+            //     }) + ' state: ' + value3);
+            //     this.addCapability('loadfirst1');
+            //     this.setCapabilityValue('loadfirst1', highval.toLocaleString('en-US', {
+            //         minimumIntegerDigits: 2,
+            //         useGrouping: false
+            //     }) + ':' + lowVal.toLocaleString('en-US', {
+            //         minimumIntegerDigits: 2,
+            //         useGrouping: false
+            //     }) + ' ~ ' + highval2.toLocaleString('en-US', {
+            //         minimumIntegerDigits: 2,
+            //         useGrouping: false
+            //     }) + ':' + lowVal2.toLocaleString('en-US', {
+            //         minimumIntegerDigits: 2,
+            //         useGrouping: false
+            //     }) + ' state: ' + value3);                
+            // }
         }
     }
 }

@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "solaredge.modbus",
-  "version": "3.0.32",
+  "version": "3.0.37",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "brandColor": "#df001c",
@@ -1069,6 +1069,37 @@
         ]
       },
       {
+        "id": "battacchargeswitch",
+        "title": {
+          "en": "Batt AC charge switch"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=growattwithbatt"
+          },
+          {
+            "name": "mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Disabled"
+                }
+              },
+              {
+                "id": "1",
+                "title": {
+                  "en": "Enabled"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
         "id": "exportlimitpowerrate",
         "title": {
           "en": "Export limit %"
@@ -1089,6 +1120,247 @@
             "max": 100,
             "step": 0.1,
             "labelDecimals": 1
+          }
+        ]
+      },
+      {
+        "id": "battfirsttime1",
+        "title": {
+          "en": "Battery 1st, time slot 1:"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=growattwithbatt"
+          },
+          {
+            "type": "range",
+            "name": "hourstart",
+            "title": {
+              "en": "Hour"
+            },
+            "min": 0,
+            "max": 23,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": ":"
+          },
+          {
+            "type": "range",
+            "name": "minstart",
+            "title": {
+              "en": "Minute"
+            },
+            "min": 0,
+            "max": 59,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": " ~ "
+          },
+          {
+            "type": "range",
+            "name": "hourstop",
+            "title": {
+              "en": "Hour"
+            },
+            "min": 0,
+            "max": 23,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": ":"
+          },
+          {
+            "type": "range",
+            "name": "minstop",
+            "title": {
+              "en": "Minute"
+            },
+            "min": 0,
+            "max": 59,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": " state: "
+          },
+          {
+            "name": "active",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Disabled"
+                }
+              },
+              {
+                "id": "1",
+                "title": {
+                  "en": "Enabled"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "gridfirsttime1",
+        "title": {
+          "en": "Grid 1st, time slot 1:"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=growattwithbatt"
+          },
+          {
+            "type": "range",
+            "name": "hourstart",
+            "title": {
+              "en": "Hour"
+            },
+            "min": 0,
+            "max": 23,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": ":"
+          },
+          {
+            "type": "range",
+            "name": "minstart",
+            "title": {
+              "en": "Minute"
+            },
+            "min": 0,
+            "max": 59,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": " ~ "
+          },
+          {
+            "type": "range",
+            "name": "hourstop",
+            "title": {
+              "en": "Hour"
+            },
+            "min": 0,
+            "max": 23,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": ":"
+          },
+          {
+            "type": "range",
+            "name": "minstop",
+            "title": {
+              "en": "Minute"
+            },
+            "min": 0,
+            "max": 59,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": " state: "
+          },
+          {
+            "name": "active",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Disabled"
+                }
+              },
+              {
+                "id": "1",
+                "title": {
+                  "en": "Enabled"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "battery_minimum_capacity",
+        "title": {
+          "en": "Battery Minimum Capacity %"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=growattwithbatt"
+          },
+          {
+            "type": "range",
+            "name": "percentage",
+            "title": {
+              "en": "percentage"
+            },
+            "min": 10,
+            "max": 100,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "battery_maximum_capacity",
+        "title": {
+          "en": "Battery Maximum Capacity %"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=growattwithbatt"
+          },
+          {
+            "type": "range",
+            "name": "percentage",
+            "title": {
+              "en": "percentage"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "prioritymode",
+        "title": {
+          "en": "Priority mode"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=growattwithbatt"
+          },
+          {
+            "name": "mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Load"
+                }
+              },
+              {
+                "id": "1",
+                "title": {
+                  "en": "Battery"
+                }
+              },
+              {
+                "id": "2",
+                "title": {
+                  "en": "Grid"
+                }
+              }
+            ]
           }
         ]
       },
@@ -1591,7 +1863,12 @@
         "meter_power.today_grid_export",
         "meter_power.today_batt_output",
         "meter_power.today_batt_input",
-        "meter_power.today_load"
+        "meter_power.today_load",
+        "batterymaxsoc",
+        "batteryminsoc",
+        "gridfirst1",
+        "battfirst1",
+        "battacchargeswitch"
       ],
       "capabilitiesOptions": {
         "measure_power": {
@@ -2219,6 +2496,30 @@
       "min": 0,
       "max": 100
     },
+    "battacchargeswitch": {
+      "type": "enum",
+      "title": {
+        "en": "Batt AC charge switch"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false,
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "Disabled"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "Enabled"
+          }
+        }
+      ]
+    },
     "battery": {
       "type": "number",
       "title": {
@@ -2284,6 +2585,42 @@
         "en": "kWh"
       }
     },
+    "batterymaxsoc": {
+      "type": "number",
+      "title": {
+        "en": "Battery Upper Capacity"
+      },
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "uiComponent": "sensor",
+      "icon": "/assets/battery.svg",
+      "units": {
+        "en": "%",
+        "nl": "%"
+      },
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    "batteryminsoc": {
+      "type": "number",
+      "title": {
+        "en": "Battery Minimum Capacity"
+      },
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "uiComponent": "sensor",
+      "icon": "/assets/battery.svg",
+      "units": {
+        "en": "%",
+        "nl": "%"
+      },
+      "min": 10,
+      "max": 100,
+      "step": 1
+    },
     "batterysoh": {
       "type": "number",
       "title": {
@@ -2312,6 +2649,16 @@
       "uiQuickAction": false,
       "icon": "/assets/operational_status.svg",
       "decimals": 0
+    },
+    "battfirst1": {
+      "type": "string",
+      "title": {
+        "en": "Battery 1st, Time slot 1"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false
     },
     "battstatus": {
       "type": "enum",
@@ -2480,6 +2827,16 @@
       "min": 0,
       "max": 100
     },
+    "gridfirst1": {
+      "type": "string",
+      "title": {
+        "en": "Grid 1st, Time slot 1"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false
+    },
     "invertorstatus": {
       "type": "enum",
       "title": {
@@ -2576,6 +2933,16 @@
           }
         }
       ]
+    },
+    "loadfirst1": {
+      "type": "string",
+      "title": {
+        "en": "Load 1st, Time slot 1"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false
     },
     "measure_current": {
       "type": "number",

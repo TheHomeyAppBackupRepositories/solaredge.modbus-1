@@ -93,7 +93,7 @@ class MyGrowattDevice extends growatt_1.Growatt {
             'host': this.getSetting('address'),
             'port': this.getSetting('port'),
             'unitId': this.getSetting('id'),
-            'timeout': 15,
+            'timeout': 22,
             'autoReconnect': false,
             'logLabel': 'Growatt Inverter',
             'logLevel': 'error',
