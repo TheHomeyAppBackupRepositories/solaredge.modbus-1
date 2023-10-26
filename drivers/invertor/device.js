@@ -41,9 +41,9 @@ class MySolaredgeDevice extends solaredge_1.Solaredge {
             // poll device state from inverter
             this.pollInvertor();
         }, RETRY_INTERVAL);
-        // // homey menu / device actions
+        // homey menu / device actions
         this.registerCapabilityListener('activepowerlimit', async (value) => {
-            this.updateControl('activepowerlimit', Number(value));
+            this.updateControl('activepowerlimit', Number(value), this);
             return value;
         });
         // this.registerCapabilityListener('limitcontrolmode', async (value) => {
@@ -58,7 +58,12 @@ class MySolaredgeDevice extends solaredge_1.Solaredge {
         });
         let controlActionActivePower = this.homey.flow.getActionCard('activepowerlimit');
         controlActionActivePower.registerRunListener(async (args, state) => {
-            await this.updateControl('activepowerlimit', Number(args.value));
+            // let name = this.getData().id;
+            // this.log("device name id " + name );
+            // this.log("device name " + this.getName());
+            this.log(args.device.getName());
+            this.log(args.device.getSettings());
+            await this.updateControl('activepowerlimit', Number(args.value), args.device);
         });
         // flow conditions
         let changedStatus = this.homey.flow.getConditionCard("changedStatus");
@@ -66,6 +71,24 @@ class MySolaredgeDevice extends solaredge_1.Solaredge {
             let result = (await this.getCapabilityValue('invertorstatus') == args.argument_main);
             return Promise.resolve(result);
         });
+        if (this.hasCapability('measure_voltage.phase1') === false) {
+            await this.addCapability('measure_voltage.phase1');
+        }
+        if (this.hasCapability('measure_voltage.phase2') === false) {
+            await this.addCapability('measure_voltage.phase2');
+        }
+        if (this.hasCapability('measure_voltage.phase3') === false) {
+            await this.addCapability('measure_voltage.phase3');
+        }
+        if (this.hasCapability('measure_voltage.phase1n') === false) {
+            await this.addCapability('measure_voltage.phase1n');
+        }
+        if (this.hasCapability('measure_voltage.phase2n') === false) {
+            await this.addCapability('measure_voltage.phase2n');
+        }
+        if (this.hasCapability('measure_voltage.phase3n') === false) {
+            await this.addCapability('measure_voltage.phase3n');
+        }
     }
     /**
      * onAdded is called when the user adds the device, called just after pairing.
@@ -99,14 +122,17 @@ class MySolaredgeDevice extends solaredge_1.Solaredge {
         this.log('MySolaredgeDevice has been deleted');
         this.homey.clearInterval(this.timer);
     }
-    async updateControl(type, value) {
+    async updateControl(type, value, device) {
+        let name = device.getData().id;
+        this.log("device name id " + name);
+        this.log("device name " + device.getName());
         let socket = new net_1.default.Socket();
-        var unitID = this.getSetting('id');
+        var unitID = device.getSetting('id');
         let client = new Modbus.client.TCP(socket, unitID);
         let modbusOptions = {
-            'host': this.getSetting('address'),
-            'port': this.getSetting('port'),
-            'unitId': this.getSetting('id'),
+            'host': device.getSetting('address'),
+            'port': device.getSetting('port'),
+            'unitId': device.getSetting('id'),
             'timeout': 15,
             'autoReconnect': false,
             'logLabel': 'solaredge Inverter',
