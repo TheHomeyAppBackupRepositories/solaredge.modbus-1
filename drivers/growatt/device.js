@@ -41,18 +41,6 @@ class MyGrowattDevice extends growatt_1.Growatt {
             // poll device state from inverter
             this.pollInvertor();
         }, RETRY_INTERVAL);
-        // flow action 
-        let solarchargeStatus = this.homey.flow.getConditionCard("solarcharge");
-        solarchargeStatus.registerRunListener(async (args, state) => {
-            let result = (await this.getCapabilityValue('measure_power') >= args.charging);
-            return Promise.resolve(result);
-        });
-        // // flow conditions
-        // let changedStatus = this.homey.flow.getConditionCard("changedStatus");
-        // changedStatus.registerRunListener(async (args, state) => {
-        //   let result = (await this.getCapabilityValue('invertorstatus') == args.argument_main);
-        //   return Promise.resolve(result);
-        // })  
     }
     /**
      * onAdded is called when the user adds the device, called just after pairing.
@@ -101,7 +89,7 @@ class MyGrowattDevice extends growatt_1.Growatt {
         };
         let socket = new net_1.default.Socket();
         var unitID = this.getSetting('id');
-        let client = new Modbus.client.TCP(socket, unitID);
+        let client = new Modbus.client.TCP(socket, unitID, 1000);
         socket.setKeepAlive(false);
         socket.connect(modbusOptions);
         socket.on('connect', async () => {
@@ -112,7 +100,7 @@ class MyGrowattDevice extends growatt_1.Growatt {
             client.socket.end();
             socket.end();
             const finalRes = { ...checkRegisterRes };
-            this.processResult(finalRes);
+            this.processResult(finalRes, this.getSetting('maxpeakpower'));
         });
         socket.on('close', () => {
             console.log('Client closed');

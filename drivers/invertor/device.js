@@ -26,7 +26,7 @@ const Modbus = __importStar(require("jsmodbus"));
 const net_1 = __importDefault(require("net"));
 const solaredge_1 = require("../solaredge");
 const response_1 = require("../response");
-const RETRY_INTERVAL = 28 * 1000;
+const DEFAULT_RETRY_INTERVAL = 28;
 class MySolaredgeDevice extends solaredge_1.Solaredge {
     /**
      * onInit is called when the device is initialized.
@@ -37,10 +37,15 @@ class MySolaredgeDevice extends solaredge_1.Solaredge {
         this.log("device name id " + name);
         this.log("device name " + this.getName());
         this.pollInvertor();
+        let settings = this.getSettings();
+        if (settings.pollinginterval === undefined) {
+            this.setSettings({ pollinginterval: DEFAULT_RETRY_INTERVAL });
+            settings.pollinginterval = 28;
+        }
         this.timer = this.homey.setInterval(() => {
             // poll device state from inverter
             this.pollInvertor();
-        }, RETRY_INTERVAL);
+        }, settings.pollinginterval * 1000);
         // homey menu / device actions
         this.registerCapabilityListener('activepowerlimit', async (value) => {
             this.updateControl('activepowerlimit', Number(value), this);
@@ -50,12 +55,6 @@ class MySolaredgeDevice extends solaredge_1.Solaredge {
         //   this.updateControl('limitcontrolmode', Number(value));
         //   return value;
         // });
-        // flow action 
-        let solarchargeStatus = this.homey.flow.getConditionCard("solarcharge");
-        solarchargeStatus.registerRunListener(async (args, state) => {
-            let result = (await this.getCapabilityValue('measure_power') >= args.charging);
-            return Promise.resolve(result);
-        });
         let controlActionActivePower = this.homey.flow.getActionCard('activepowerlimit');
         controlActionActivePower.registerRunListener(async (args, state) => {
             // let name = this.getData().id;
@@ -65,29 +64,46 @@ class MySolaredgeDevice extends solaredge_1.Solaredge {
             this.log(args.device.getSettings());
             await this.updateControl('activepowerlimit', Number(args.value), args.device);
         });
+        let controlpowerreduce = this.homey.flow.getActionCard('powerreduce');
+        controlpowerreduce.registerRunListener(async (args, state) => {
+            // let name = this.getData().id;
+            // this.log("device name id " + name );
+            // this.log("device name " + this.getName());
+            this.log(args.device.getName());
+            this.log(args.device.getSettings());
+            await this.updateControl('powerreduce', Number(args.value), args.device);
+        });
         // flow conditions
         let changedStatus = this.homey.flow.getConditionCard("changedStatus");
         changedStatus.registerRunListener(async (args, state) => {
             let result = (await this.getCapabilityValue('invertorstatus') == args.argument_main);
             return Promise.resolve(result);
         });
-        if (this.hasCapability('measure_voltage.phase1') === false) {
-            await this.addCapability('measure_voltage.phase1');
-        }
-        if (this.hasCapability('measure_voltage.phase2') === false) {
-            await this.addCapability('measure_voltage.phase2');
-        }
-        if (this.hasCapability('measure_voltage.phase3') === false) {
-            await this.addCapability('measure_voltage.phase3');
-        }
-        if (this.hasCapability('measure_voltage.phase1n') === false) {
-            await this.addCapability('measure_voltage.phase1n');
-        }
-        if (this.hasCapability('measure_voltage.phase2n') === false) {
-            await this.addCapability('measure_voltage.phase2n');
-        }
-        if (this.hasCapability('measure_voltage.phase3n') === false) {
-            await this.addCapability('measure_voltage.phase3n');
+        let solarcharge = this.homey.flow.getConditionCard("solarcharge");
+        solarcharge.registerRunListener(async (args, state) => {
+            let result = (await this.getCapabilityValue('measure_power') >= args.charging);
+            return Promise.resolve(result);
+        });
+        // if (this.hasCapability('measure_voltage.phase1') === false) {
+        //   await this.addCapability('measure_voltage.phase1');
+        // }
+        // if (this.hasCapability('measure_voltage.phase2') === false) {
+        //   await this.addCapability('measure_voltage.phase2');
+        // }
+        // if (this.hasCapability('measure_voltage.phase3') === false) {
+        //   await this.addCapability('measure_voltage.phase3');
+        // } 
+        // if (this.hasCapability('measure_voltage.phase1n') === false) {
+        //   await this.addCapability('measure_voltage.phase1n');
+        // }
+        // if (this.hasCapability('measure_voltage.phase2n') === false) {
+        //   await this.addCapability('measure_voltage.phase2n');
+        // }
+        // if (this.hasCapability('measure_voltage.phase3n') === false) {
+        //   await this.addCapability('measure_voltage.phase3n');
+        // } 
+        if (this.hasCapability('powerreduce') === false) {
+            await this.addCapability('powerreduce');
         }
     }
     /**
@@ -104,8 +120,16 @@ class MySolaredgeDevice extends solaredge_1.Solaredge {
      * @param {string[]} event.changedKeys An array of keys changed since the previous version
      * @returns {Promise<string|void>} return a custom message that will be displayed
      */
-    async onSettings({ oldSettings: {}, newSettings: {}, changedKeys: {} }) {
+    async onSettings({ oldSettings, newSettings, changedKeys, }) {
         this.log('MySolaredgeDevice settings where changed');
+        if (changedKeys.indexOf('pollinginterval') > -1) {
+            console.log('Changing the "pollinginterval" settings from', oldSettings.pollinginterval, 'to', newSettings.pollinginterval);
+            this.homey.clearInterval(this.timer);
+            this.timer = this.homey.setInterval(() => {
+                // poll device state from inverter
+                this.pollInvertor();
+            }, Number(newSettings.pollinginterval) * 1000);
+        }
     }
     /**
      * onRenamed is called when the user updates the device's name.
@@ -133,7 +157,7 @@ class MySolaredgeDevice extends solaredge_1.Solaredge {
             'host': device.getSetting('address'),
             'port': device.getSetting('port'),
             'unitId': device.getSetting('id'),
-            'timeout': 15,
+            'timeout': device.getSetting('pollinginterval') - 1,
             'autoReconnect': false,
             'logLabel': 'solaredge Inverter',
             'logLevel': 'error',
@@ -149,6 +173,16 @@ class MySolaredgeDevice extends solaredge_1.Solaredge {
             if (type == 'activepowerlimit') {
                 const activepowerlimitRes = await client.writeSingleRegister(0xf001, Number(value));
                 console.log('activepowerlimit', activepowerlimitRes);
+            }
+            if (type == 'powerreduce') {
+                let buffer;
+                buffer = Buffer.allocUnsafe(4);
+                buffer.writeFloatBE(value);
+                buffer.swap32().swap16();
+                let bytes = buffer.toString('hex').toUpperCase().replace(/(.{2})/g, "$1 ").trimEnd();
+                console.log("Write register: Bytes: " + bytes);
+                const powerreduceRes = await client.writeMultipleRegisters(0xf140, buffer);
+                console.log('powerreduce', powerreduceRes);
             }
             if (type == 'limitcontrolmode') {
                 // 0 – Disabled
@@ -269,7 +303,7 @@ class MySolaredgeDevice extends solaredge_1.Solaredge {
             'host': this.getSetting('address'),
             'port': this.getSetting('port'),
             'unitId': this.getSetting('id'),
-            'timeout': 15,
+            'timeout': this.getSetting('pollinginterval') - 1,
             'autoReconnect': false,
             'logLabel': 'solaredge Inverter',
             'logLevel': 'error',
@@ -277,7 +311,7 @@ class MySolaredgeDevice extends solaredge_1.Solaredge {
         };
         let socket = new net_1.default.Socket();
         var unitID = this.getSetting('id');
-        let client = new Modbus.client.TCP(socket, unitID);
+        let client = new Modbus.client.TCP(socket, unitID, 1000);
         socket.setKeepAlive(false);
         socket.connect(modbusOptions);
         socket.on('connect', async () => {
@@ -288,7 +322,7 @@ class MySolaredgeDevice extends solaredge_1.Solaredge {
             client.socket.end();
             socket.end();
             const finalRes = { ...checkRegisterRes };
-            this.processResult(finalRes);
+            this.processResult(finalRes, this.getSetting('maxpeakpower'));
         });
         socket.on('close', () => {
             console.log('Client closed');

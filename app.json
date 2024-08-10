@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "solaredge.modbus",
-  "version": "3.0.47",
+  "version": "3.0.131",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "brandColor": "#df001c",
@@ -12,8 +12,8 @@
     "en": "SolarEdge + Growatt TCP modbus"
   },
   "description": {
-    "en": "Monitor SolarEdge + Growatt inverters over TCP modbus protocol",
-    "de": "Überwache SolarEdge- und Growatt-Wechselrichter über das TCP-Modbus-Protokoll"
+    "en": "Monitor various inverters over TCP modbus protocol",
+    "de": "Überwache verschieden Wechselrichter über das TCP-Modbus-Protokoll"
   },
   "category": [
     "energy"
@@ -24,7 +24,15 @@
       "growatt",
       "inverter",
       "solar",
-      "modbus"
+      "modbus",
+      "wattsonic",
+      "sunways",
+      "solinteg",
+      "A-Tronix",
+      "St-ems",
+      "sungrow",
+      "huawei",
+      "solax"
     ],
     "nl": [
       "solaredge",
@@ -32,14 +40,31 @@
       "omvormer",
       "zonnepanelen",
       "modbus",
-      "solar"
+      "solar",
+      "modbus",
+      "wattsonic",
+      "sunways",
+      "solinteg",
+      "A-Tronix",
+      "St-ems",
+      "sungrow",
+      "huawei",
+      "solax"
     ],
     "de": [
       "solaredge",
       "growatt",
       "wechselrichter",
       "solar",
-      "modbus"
+      "modbus",
+      "wattsonic",
+      "sunways",
+      "solinteg",
+      "A-Tronix",
+      "St-ems",
+      "sungrow",
+      "huawei",
+      "solax"
     ]
   },
   "bugs": {
@@ -154,7 +179,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=invertor|invertorwithbatt"
+            "filter": "driver_id=invertor|invertorwithbatt|sungrowhybirdwithbatt"
           }
         ],
         "id": "measure_power_changed"
@@ -182,7 +207,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=invertor|invertorwithbatt"
+            "filter": "driver_id=invertor|invertorwithbatt|sungrowhybirdwithbatt"
           }
         ],
         "id": "measure_temperature_inverter_changed"
@@ -209,7 +234,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=invertor|invertorwithbatt"
+            "filter": "driver_id=invertor|invertorwithbatt|sungrowhybirdwithbatt"
           }
         ],
         "id": "meter_power_changed"
@@ -236,10 +261,60 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=invertor|invertorwithbatt"
+            "filter": "driver_id=invertor|invertorwithbatt|sungrowhybirdwithbatt"
           }
         ],
         "id": "meter_power_day_changed"
+      },
+      {
+        "id": "changedStoragecontrolmode",
+        "title": {
+          "en": "Storage Control Mode has changed",
+          "de": "Speicherkontrollmodus hat sich geändert"
+        },
+        "tokens": [
+          {
+            "name": "mode",
+            "type": "number",
+            "title": {
+              "en": "Value",
+              "de": "Wert"
+            },
+            "example": 0
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=invertorwithbatt"
+          }
+        ]
+      },
+      {
+        "id": "changedStoragedefaultmode",
+        "title": {
+          "en": "Storage Charge/Discharge Mode has changed",
+          "de": "Speicher-Lade/Entlade-Modus hat sich geändert"
+        },
+        "tokens": [
+          {
+            "name": "mode",
+            "type": "number",
+            "title": {
+              "en": "Value",
+              "de": "Wert"
+            },
+            "example": 0
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=invertorwithbatt"
+          }
+        ]
       },
       {
         "id": "changedBattery",
@@ -614,6 +689,85 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=invertorwithbatt"
+          }
+        ]
+      },
+      {
+        "id": "measure_power_load_changed",
+        "title": {
+          "en": "Load Yield changed",
+          "nl": "Load is veranderd",
+          "de": "Verbrauch hat sich geändert"
+        },
+        "tokens": [
+          {
+            "name": "measure_power.load",
+            "title": {
+              "en": "Power",
+              "nl": "Vermogen",
+              "de": "Leistung"
+            },
+            "type": "number",
+            "example": 100
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=sungrowhybirdwithbatt"
+          }
+        ]
+      },
+      {
+        "id": "measure_power_grid_import_changed",
+        "title": {
+          "en": "Grid Import changed",
+          "de": "Netzimport hat sich geändert"
+        },
+        "tokens": [
+          {
+            "name": "measure_power.grid_import",
+            "title": {
+              "en": "Power",
+              "nl": "Vermogen",
+              "de": "Leistung"
+            },
+            "type": "number",
+            "example": 100
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=sungrowhybirdwithbatt"
+          }
+        ]
+      },
+      {
+        "id": "measure_power_grid_export_changed",
+        "title": {
+          "en": "Grid Export changed",
+          "de": "Netztexport hat sich geändert"
+        },
+        "tokens": [
+          {
+            "name": "measure_power.grid_export",
+            "title": {
+              "en": "Power",
+              "nl": "Vermogen",
+              "de": "Leistung"
+            },
+            "type": "number",
+            "example": 100
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=sungrowhybirdwithbatt"
           }
         ]
       }
@@ -1094,6 +1248,120 @@
             ]
           }
         ]
+      },
+      {
+        "id": "changedsolarcharger_use_mode",
+        "title": {
+          "en": "Use mode is"
+        },
+        "titleFormatted": {
+          "en": "Use Mode is [[argument_main]]"
+        },
+        "hint": {
+          "en": "Use Mode"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=solaxwithbatt"
+          },
+          {
+            "name": "argument_main",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Self use mode"
+                }
+              },
+              {
+                "id": "1",
+                "title": {
+                  "en": "Feedin Priority"
+                }
+              },
+              {
+                "id": "2",
+                "title": {
+                  "en": "Back up mode"
+                }
+              },
+              {
+                "id": "3",
+                "title": {
+                  "en": "Manual mode"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "changedstorage_force_charge_discharge",
+        "title": {
+          "en": "Storage Charge/Discharge mode is"
+        },
+        "titleFormatted": {
+          "en": "Storage Charge/Discharge mode is [[argument_main]]"
+        },
+        "hint": {
+          "en": "Storage Charge/Discharge mode"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=solaxwithbatt"
+          },
+          {
+            "name": "argument_main",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Stop"
+                }
+              },
+              {
+                "id": "1",
+                "title": {
+                  "en": "Charge"
+                }
+              },
+              {
+                "id": "2",
+                "title": {
+                  "en": "Discharge"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "batterylevelWattsonic",
+        "title": {
+          "en": "Battery !{{is|isn't}} higher than",
+          "de": "Batteriestand !{{ist|ist nicht}} größer als"
+        },
+        "hint": {
+          "en": "Battery charged in percentage",
+          "de": "Batteriestand in Prozent"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wattsonicwithbatt"
+          },
+          {
+            "name": "charged",
+            "type": "number"
+          }
+        ]
       }
     ],
     "actions": [
@@ -1122,6 +1390,90 @@
           }
         ],
         "id": "activepowerlimit"
+      },
+      {
+        "title": {
+          "en": "Set Battery AC charge switch to",
+          "de": "Setze Netzladung der Batterie auf"
+        },
+        "args": [
+          {
+            "name": "mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Disabled",
+                  "de": "Deaktiviert"
+                }
+              },
+              {
+                "id": "1",
+                "title": {
+                  "en": "Enabled",
+                  "de": "Aktiviert"
+                }
+              }
+            ]
+          },
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=growattwithbatt|growattwithbatt_tl"
+          }
+        ],
+        "id": "battacchargeswitch"
+      },
+      {
+        "title": {
+          "en": "Set Battery Maximum Capacity to",
+          "de": "Setze Batteriemaximumstand auf"
+        },
+        "args": [
+          {
+            "type": "range",
+            "name": "percentage",
+            "title": {
+              "en": "percentage",
+              "de": "Prozent"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 1
+          },
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=growattwithbatt|growattwithbatt_tl"
+          }
+        ],
+        "id": "battery_maximum_capacity"
+      },
+      {
+        "title": {
+          "en": "Set Battery Minimum Capacity to",
+          "de": "Setze Batteriemindeststand auf"
+        },
+        "args": [
+          {
+            "type": "range",
+            "name": "percentage",
+            "title": {
+              "en": "percentage",
+              "de": "Prozent"
+            },
+            "min": 10,
+            "max": 100,
+            "step": 1
+          },
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=growattwithbatt|growattwithbatt_tl"
+          }
+        ],
+        "id": "battery_minimum_capacity"
       },
       {
         "title": {
@@ -1228,6 +1580,42 @@
                 "label": {
                   "en": "6600W"
                 }
+              },
+              {
+                "id": "8000",
+                "label": {
+                  "en": "8000W"
+                }
+              },
+              {
+                "id": "10000",
+                "label": {
+                  "en": "10000W"
+                }
+              },
+              {
+                "id": "12000",
+                "label": {
+                  "en": "12000W"
+                }
+              },
+              {
+                "id": "15000",
+                "label": {
+                  "en": "15000W"
+                }
+              },
+              {
+                "id": "20000",
+                "label": {
+                  "en": "20000W"
+                }
+              },
+              {
+                "id": "25000",
+                "label": {
+                  "en": "25000W"
+                }
               }
             ]
           },
@@ -1238,6 +1626,66 @@
           }
         ],
         "id": "exportlimit"
+      },
+      {
+        "title": {
+          "en": "Set export limit to",
+          "de": "Setze Exportbeschränkung auf"
+        },
+        "args": [
+          {
+            "name": "mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Disabled",
+                  "de": "Deaktiviert"
+                }
+              },
+              {
+                "id": "1",
+                "title": {
+                  "en": "Enabled",
+                  "de": "Aktiviert"
+                }
+              }
+            ]
+          },
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=growattwithbatt|growattwithbatt_tl"
+          }
+        ],
+        "id": "exportlimitenabled"
+      },
+      {
+        "title": {
+          "en": "Set Export limit to",
+          "de": "Setze Exportbeschränkung auf"
+        },
+        "args": [
+          {
+            "type": "range",
+            "name": "percentage",
+            "title": {
+              "en": "percentage",
+              "de": "Prozent"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 0.1,
+            "labelDecimals": 1
+          },
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=growattwithbatt|growattwithbatt_tl"
+          }
+        ],
+        "id": "exportlimitpowerrate"
       },
       {
         "title": {
@@ -1264,6 +1712,13 @@
                 }
               },
               {
+                "id": "2",
+                "title": {
+                  "en": "Production Limitation",
+                  "de": "Production beschränkung"
+                }
+              },
+              {
                 "id": "11",
                 "title": {
                   "en": "Import Control",
@@ -1281,17 +1736,11 @@
         "id": "limitcontrolmode"
       },
       {
-        "id": "exportlimitenabled",
         "title": {
-          "en": "Set export limit to",
-          "de": "Setze Exportbeschränkung auf"
+          "en": "Set Priority mode to",
+          "de": "Setze Priorität auf"
         },
         "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=growattwithbatt"
-          },
           {
             "name": "mode",
             "type": "dropdown",
@@ -1299,80 +1748,33 @@
               {
                 "id": "0",
                 "title": {
-                  "en": "Disabled",
-                  "de": "Deaktiviert"
+                  "en": "Load",
+                  "de": "Last"
                 }
               },
               {
                 "id": "1",
                 "title": {
-                  "en": "Enabled",
-                  "de": "Aktiviert"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "battacchargeswitch",
-        "title": {
-          "en": "Set Battery AC charge switch to",
-          "de": "Setze Netzladung der Batterie auf"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=growattwithbatt"
-          },
-          {
-            "name": "mode",
-            "type": "dropdown",
-            "values": [
-              {
-                "id": "0",
-                "title": {
-                  "en": "Disabled",
-                  "de": "Deaktiviert"
+                  "en": "Battery",
+                  "de": "Batterie"
                 }
               },
               {
-                "id": "1",
+                "id": "2",
                 "title": {
-                  "en": "Enabled",
-                  "de": "Aktiviert"
+                  "en": "Grid",
+                  "de": "Netz"
                 }
               }
             ]
-          }
-        ]
-      },
-      {
-        "id": "exportlimitpowerrate",
-        "title": {
-          "en": "Set Export limit to",
-          "de": "Setze Exportbeschränkung auf"
-        },
-        "args": [
+          },
           {
             "type": "device",
             "name": "device",
             "filter": "driver_id=growattwithbatt"
-          },
-          {
-            "type": "range",
-            "name": "percentage",
-            "title": {
-              "en": "percentage",
-              "de": "Prozent"
-            },
-            "min": 0,
-            "max": 100,
-            "step": 0.1,
-            "labelDecimals": 1
           }
-        ]
+        ],
+        "id": "prioritymode"
       },
       {
         "id": "battfirsttime1",
@@ -1547,70 +1949,73 @@
         ]
       },
       {
-        "id": "battery_minimum_capacity",
+        "id": "period1",
         "title": {
-          "en": "Set Battery Minimum Capacity to",
-          "de": "Setze Batteriemindeststand auf"
+          "en": "Time slot 1:",
+          "de": "Zeitfenster 1:"
         },
         "args": [
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=growattwithbatt"
+            "filter": "driver_id=growattwithbatt_tl"
           },
           {
             "type": "range",
-            "name": "percentage",
+            "name": "hourstart",
             "title": {
-              "en": "percentage",
-              "de": "Prozent"
-            },
-            "min": 10,
-            "max": 100,
-            "step": 1
-          }
-        ]
-      },
-      {
-        "id": "battery_maximum_capacity",
-        "title": {
-          "en": "Set Battery Maximum Capacity to",
-          "de": "Setze Batteriemaximumstand auf"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=growattwithbatt"
-          },
-          {
-            "type": "range",
-            "name": "percentage",
-            "title": {
-              "en": "percentage",
-              "de": "Prozent"
+              "en": "Hour",
+              "de": "Stunde"
             },
             "min": 0,
-            "max": 100,
-            "step": 1
-          }
-        ]
-      },
-      {
-        "id": "prioritymode",
-        "title": {
-          "en": "Set Priority mode to",
-          "de": "Setze Priorität auf"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=growattwithbatt"
+            "max": 23,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": ":"
           },
           {
-            "name": "mode",
+            "type": "range",
+            "name": "minstart",
+            "title": {
+              "en": "Minute",
+              "de": "Minute"
+            },
+            "min": 0,
+            "max": 59,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": " ~ "
+          },
+          {
+            "type": "range",
+            "name": "hourstop",
+            "title": {
+              "en": "Hour",
+              "de": "Stunde"
+            },
+            "min": 0,
+            "max": 23,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": ":"
+          },
+          {
+            "type": "range",
+            "name": "minstop",
+            "title": {
+              "en": "Minute",
+              "de": "Minute"
+            },
+            "min": 0,
+            "max": 59,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": " priority: "
+          },
+          {
+            "name": "priority",
             "type": "dropdown",
+            "label": " state: ",
             "values": [
               {
                 "id": "0",
@@ -1620,20 +2025,407 @@
                 }
               },
               {
-                "id": "1",
+                "id": "32",
                 "title": {
                   "en": "Battery",
                   "de": "Batterie"
                 }
               },
               {
-                "id": "2",
+                "id": "64",
                 "title": {
                   "en": "Grid",
                   "de": "Netz"
                 }
               }
             ]
+          },
+          {
+            "name": "active",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Disabled",
+                  "de": "Deaktiviert"
+                }
+              },
+              {
+                "id": "128",
+                "title": {
+                  "en": "Enabled",
+                  "de": "Aktiviert"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "period2",
+        "title": {
+          "en": "Time slot 2:",
+          "de": "Zeitfenster 2:"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=growattwithbatt_tl"
+          },
+          {
+            "type": "range",
+            "name": "hourstart",
+            "title": {
+              "en": "Hour",
+              "de": "Stunde"
+            },
+            "min": 0,
+            "max": 23,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": ":"
+          },
+          {
+            "type": "range",
+            "name": "minstart",
+            "title": {
+              "en": "Minute",
+              "de": "Minute"
+            },
+            "min": 0,
+            "max": 59,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": " ~ "
+          },
+          {
+            "type": "range",
+            "name": "hourstop",
+            "title": {
+              "en": "Hour",
+              "de": "Stunde"
+            },
+            "min": 0,
+            "max": 23,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": ":"
+          },
+          {
+            "type": "range",
+            "name": "minstop",
+            "title": {
+              "en": "Minute",
+              "de": "Minute"
+            },
+            "min": 0,
+            "max": 59,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": " priority: "
+          },
+          {
+            "name": "priority",
+            "type": "dropdown",
+            "label": " state: ",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Load",
+                  "de": "Last"
+                }
+              },
+              {
+                "id": "32",
+                "title": {
+                  "en": "Battery",
+                  "de": "Batterie"
+                }
+              },
+              {
+                "id": "64",
+                "title": {
+                  "en": "Grid",
+                  "de": "Netz"
+                }
+              }
+            ]
+          },
+          {
+            "name": "active",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Disabled",
+                  "de": "Deaktiviert"
+                }
+              },
+              {
+                "id": "128",
+                "title": {
+                  "en": "Enabled",
+                  "de": "Aktiviert"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "period3",
+        "title": {
+          "en": "Time slot 3:",
+          "de": "Zeitfenster 3:"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=growattwithbatt_tl"
+          },
+          {
+            "type": "range",
+            "name": "hourstart",
+            "title": {
+              "en": "Hour",
+              "de": "Stunde"
+            },
+            "min": 0,
+            "max": 23,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": ":"
+          },
+          {
+            "type": "range",
+            "name": "minstart",
+            "title": {
+              "en": "Minute",
+              "de": "Minute"
+            },
+            "min": 0,
+            "max": 59,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": " ~ "
+          },
+          {
+            "type": "range",
+            "name": "hourstop",
+            "title": {
+              "en": "Hour",
+              "de": "Stunde"
+            },
+            "min": 0,
+            "max": 23,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": ":"
+          },
+          {
+            "type": "range",
+            "name": "minstop",
+            "title": {
+              "en": "Minute",
+              "de": "Minute"
+            },
+            "min": 0,
+            "max": 59,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": " priority: "
+          },
+          {
+            "name": "priority",
+            "type": "dropdown",
+            "label": " state: ",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Load",
+                  "de": "Last"
+                }
+              },
+              {
+                "id": "32",
+                "title": {
+                  "en": "Battery",
+                  "de": "Batterie"
+                }
+              },
+              {
+                "id": "64",
+                "title": {
+                  "en": "Grid",
+                  "de": "Netz"
+                }
+              }
+            ]
+          },
+          {
+            "name": "active",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Disabled",
+                  "de": "Deaktiviert"
+                }
+              },
+              {
+                "id": "128",
+                "title": {
+                  "en": "Enabled",
+                  "de": "Aktiviert"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "period4",
+        "title": {
+          "en": "Time slot 4:",
+          "de": "Zeitfenster 4:"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=growattwithbatt_tl"
+          },
+          {
+            "type": "range",
+            "name": "hourstart",
+            "title": {
+              "en": "Hour",
+              "de": "Stunde"
+            },
+            "min": 0,
+            "max": 23,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": ":"
+          },
+          {
+            "type": "range",
+            "name": "minstart",
+            "title": {
+              "en": "Minute",
+              "de": "Minute"
+            },
+            "min": 0,
+            "max": 59,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": " ~ "
+          },
+          {
+            "type": "range",
+            "name": "hourstop",
+            "title": {
+              "en": "Hour",
+              "de": "Stunde"
+            },
+            "min": 0,
+            "max": 23,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": ":"
+          },
+          {
+            "type": "range",
+            "name": "minstop",
+            "title": {
+              "en": "Minute",
+              "de": "Minute"
+            },
+            "min": 0,
+            "max": 59,
+            "step": 1,
+            "labelDecimals": 0,
+            "label": " priority: "
+          },
+          {
+            "name": "priority",
+            "type": "dropdown",
+            "label": " state: ",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Load",
+                  "de": "Last"
+                }
+              },
+              {
+                "id": "32",
+                "title": {
+                  "en": "Battery",
+                  "de": "Batterie"
+                }
+              },
+              {
+                "id": "64",
+                "title": {
+                  "en": "Grid",
+                  "de": "Netz"
+                }
+              }
+            ]
+          },
+          {
+            "name": "active",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Disabled",
+                  "de": "Deaktiviert"
+                }
+              },
+              {
+                "id": "128",
+                "title": {
+                  "en": "Enabled",
+                  "de": "Aktiviert"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "powerreduce",
+        "title": {
+          "en": "Set Power reduce Limit to"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=invertor"
+          },
+          {
+            "type": "range",
+            "name": "value",
+            "title": {
+              "en": "percentage",
+              "de": "Prozent"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "labelDecimals": 0
           }
         ]
       },
@@ -1945,6 +2737,334 @@
             ]
           }
         ]
+      },
+      {
+        "id": "FeedinOnPower",
+        "title": {
+          "en": "Set Feedin Power to"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=solaxwithbatt"
+          },
+          {
+            "type": "number",
+            "name": "power",
+            "title": {
+              "en": "Power"
+            },
+            "min": 0,
+            "max": 8000,
+            "step": 1,
+            "placeholder": {
+              "en": "In Watt"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ExportcontrolUserLimit",
+        "title": {
+          "en": "Set User Export Power to"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=solaxwithbatt"
+          },
+          {
+            "type": "number",
+            "name": "power",
+            "title": {
+              "en": "Power"
+            },
+            "min": 0,
+            "max": 60000,
+            "step": 1,
+            "placeholder": {
+              "en": "In Watt"
+            }
+          }
+        ]
+      },
+      {
+        "id": "solarcharger_use_mode",
+        "title": {
+          "en": "Use mode"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=solaxwithbatt"
+          },
+          {
+            "name": "mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Self use mode"
+                }
+              },
+              {
+                "id": "1",
+                "title": {
+                  "en": "Feedin Priority"
+                }
+              },
+              {
+                "id": "2",
+                "title": {
+                  "en": "Back up mode"
+                }
+              },
+              {
+                "id": "3",
+                "title": {
+                  "en": "Manual mode"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "storage_force_charge_discharge",
+        "title": {
+          "en": "Set Storage Charge/Discharge Mode to",
+          "de": "Setze Speicher-Lade/Entlade-Modus auf"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=solaxwithbatt"
+          },
+          {
+            "name": "mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Stop"
+                }
+              },
+              {
+                "id": "1",
+                "title": {
+                  "en": "Charge"
+                }
+              },
+              {
+                "id": "2",
+                "title": {
+                  "en": "Discharge"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "emsmodeselection",
+        "title": {
+          "en": "Hybrid Inverter Working Mode"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=sungrowhybirdwithbatt"
+          },
+          {
+            "name": "mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Self-consumption mode"
+                }
+              },
+              {
+                "id": "2",
+                "title": {
+                  "en": "Forced mode (charge/discharge/stop)"
+                }
+              },
+              {
+                "id": "3",
+                "title": {
+                  "en": "External EMS mode"
+                }
+              },
+              {
+                "id": "4",
+                "title": {
+                  "en": "VPP"
+                }
+              },
+              {
+                "id": "8",
+                "title": {
+                  "en": "MicroGrid"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "export",
+        "title": {
+          "en": "Set export limit",
+          "de": "Exportbeschränkung"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=sungrowhybirdwithbatt"
+          },
+          {
+            "name": "limitation",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "85",
+                "title": {
+                  "en": "Disabled",
+                  "de": "Deaktiviert"
+                }
+              },
+              {
+                "id": "170",
+                "title": {
+                  "en": "Enabled",
+                  "de": "Aktiviert"
+                }
+              }
+            ]
+          },
+          {
+            "name": "power",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "id": "charge",
+        "title": {
+          "en": "Charge/discharge"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=sungrowhybirdwithbatt"
+          },
+          {
+            "name": "command",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "170",
+                "title": {
+                  "en": "Charge"
+                }
+              },
+              {
+                "id": "187",
+                "title": {
+                  "en": "Discharge"
+                }
+              },
+              {
+                "id": "204",
+                "title": {
+                  "en": "Stop"
+                }
+              }
+            ]
+          },
+          {
+            "name": "power",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "id": "hybridinvertermode",
+        "title": {
+          "en": "Hybrid Inverter Working Mode"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wattsonicwithbatt"
+          },
+          {
+            "name": "mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "11",
+                "title": {
+                  "en": "General Mode"
+                }
+              },
+              {
+                "id": "12",
+                "title": {
+                  "en": "Economic Mode"
+                }
+              },
+              {
+                "id": "13",
+                "title": {
+                  "en": "UPS Mode"
+                }
+              },
+              {
+                "id": "2",
+                "title": {
+                  "en": "Off Grid Mode"
+                }
+              },
+              {
+                "id": "31",
+                "title": {
+                  "en": "EMS_ACCtrlMode"
+                }
+              },
+              {
+                "id": "32",
+                "title": {
+                  "en": "EMS_GeneralMode"
+                }
+              },
+              {
+                "id": "33",
+                "title": {
+                  "en": "EMS_BattCtrlMode"
+                }
+              },
+              {
+                "id": "34",
+                "title": {
+                  "en": "EMS_OffGridMode"
+                }
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -2141,6 +3261,15 @@
               }
             },
             {
+              "id": "maxpeakpower",
+              "type": "number",
+              "value": 0,
+              "step": 1,
+              "label": {
+                "en": "Max peak power in W"
+              }
+            },
+            {
               "id": "id",
               "type": "number",
               "value": 1,
@@ -2201,6 +3330,8 @@
         "exportlimitpowerrate",
         "priority",
         "measure_power.houseload",
+        "measure_power.import",
+        "measure_power.export",
         "meter_power.today_grid_import",
         "meter_power.today_grid_export",
         "meter_power.today_batt_output",
@@ -2210,6 +3341,352 @@
         "batteryminsoc",
         "gridfirst1",
         "battfirst1",
+        "battacchargeswitch"
+      ],
+      "capabilitiesOptions": {
+        "measure_power": {
+          "decimals": 0,
+          "title": {
+            "en": "Solar/Batt Power",
+            "de": "Solar- und Batterie-Leistung"
+          }
+        },
+        "measure_power.input": {
+          "decimals": 0,
+          "title": {
+            "en": "Solar input",
+            "de": "Solarer Eingang"
+          }
+        },
+        "measure_power.pv1input": {
+          "decimals": 0,
+          "title": {
+            "en": "PV1 input",
+            "de": "PV-Strang 1 Eingang"
+          }
+        },
+        "measure_power.pv2input": {
+          "decimals": 0,
+          "title": {
+            "en": "PV2 input",
+            "de": "PV-Strang 2 Eingang"
+          }
+        },
+        "measure_power.gridoutput": {
+          "decimals": 0,
+          "title": {
+            "en": "Grid output",
+            "de": "Netzexport"
+          }
+        },
+        "measure_current.phase1": {
+          "title": {
+            "en": "AC Current phase1",
+            "de": "AC-Strom Phase 1"
+          }
+        },
+        "measure_current.phase2": {
+          "title": {
+            "en": "AC Current phase2",
+            "de": "AC-Strom Phase 2"
+          }
+        },
+        "measure_current.phase3": {
+          "title": {
+            "en": "AC Current phase3",
+            "de": "AC-Strom Phase 3"
+          }
+        },
+        "measure_temperature.invertor": {
+          "title": {
+            "en": "Heatsink temperature",
+            "nl": "Heatsink temperatuur",
+            "de": "Kühlkörpertemperatur"
+          },
+          "decimals": 2
+        },
+        "measure_temperature.battery": {
+          "title": {
+            "en": "Battery temperature",
+            "de": "Batterietemperatur"
+          },
+          "decimals": 2
+        },
+        "meter_power": {
+          "title": {
+            "en": "Total Yield",
+            "nl": "Totale opbrengst",
+            "de": "Gesamtertrag"
+          },
+          "decimals": 1
+        },
+        "meter_power.pv1TotalEnergy": {
+          "title": {
+            "en": "Total PV1 Yield",
+            "nl": "Totale PV1 opbrengst",
+            "de": "Gesamtertrag PV-Strang 1"
+          },
+          "decimals": 1
+        },
+        "meter_power.pv2TotalEnergy": {
+          "title": {
+            "en": "Total PV2 Yield",
+            "nl": "Totale PV2 opbrengst",
+            "de": "Gesamtertrag PV-Strang 2"
+          },
+          "decimals": 1
+        },
+        "meter_power.daily": {
+          "title": {
+            "en": "Total Day Yield",
+            "nl": "Totale dag opbrengst",
+            "de": "Tagesgesamtertrag"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.pv1TodayEnergy": {
+          "title": {
+            "en": "Total PV1 Day Yield",
+            "nl": "Totale PV1 dag opbrengst",
+            "de": "Tagesgesamtertrag PV-Strang 1"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.pv2TodayEnergy": {
+          "title": {
+            "en": "Total PV2 Day Yield",
+            "nl": "Totale PV2 dag opbrengst",
+            "de": "Tagesgesamtertrag PV-Strang 2"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "measure_power.batt_discharge": {
+          "decimals": 0,
+          "title": {
+            "en": "Battery Power discharge",
+            "de": "Batterieentladeleistung"
+          }
+        },
+        "measure_power.batt_charge": {
+          "decimals": 0,
+          "title": {
+            "en": "Battery Power charge",
+            "de": "Batterieladeleistung"
+          }
+        },
+        "measure_power.houseload": {
+          "decimals": 1,
+          "title": {
+            "en": "House load",
+            "de": "Hauslast"
+          }
+        },
+        "measure_power.import": {
+          "decimals": 1,
+          "title": {
+            "en": "Imported from grid"
+          }
+        },
+        "measure_power.export": {
+          "decimals": 1,
+          "title": {
+            "en": "Exported to grid"
+          }
+        },
+        "measure_voltage.meter": {
+          "title": {
+            "en": "Meter AC Voltage",
+            "de": "Zähler AC-Spannung"
+          }
+        },
+        "measure_voltage.battery": {
+          "title": {
+            "en": "Battery Voltage",
+            "de": "Batteriespannung"
+          }
+        },
+        "meter_power.today_grid_import": {
+          "title": {
+            "en": "Grid Import Day Yield",
+            "de": "Netztagesimport"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.today_grid_export": {
+          "title": {
+            "en": "Grid Export Day Yield",
+            "de": "Netztagesexport"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.today_batt_output": {
+          "title": {
+            "en": "Battery Output Day Yield",
+            "de": "Tagesgesamtentladung der Batterie"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.today_batt_input": {
+          "title": {
+            "en": "Battery Input Day Yield",
+            "de": "Tagesgesamtladung der Batterie"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.today_load": {
+          "title": {
+            "en": "Load Day Yield",
+            "de": "Tagesgesamtverbrauch"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "images": {
+        "small": "/drivers/growattwithbatt/assets/images/small.png",
+        "large": "/drivers/growattwithbatt/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "start"
+        }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Inverter settings",
+            "de": "Wechselrichtereinstellungen"
+          },
+          "children": [
+            {
+              "id": "address",
+              "type": "text",
+              "value": "0.0.0.0",
+              "label": {
+                "en": "IP Address",
+                "de": "IP-Adresse"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "value": 1502,
+              "step": 1,
+              "label": {
+                "en": "Port",
+                "de": "Port"
+              }
+            },
+            {
+              "id": "maxpeakpower",
+              "type": "number",
+              "value": 0,
+              "step": 1,
+              "label": {
+                "en": "Max peak power in W"
+              }
+            },
+            {
+              "id": "id",
+              "type": "number",
+              "value": 1,
+              "step": 1,
+              "attr": {
+                "min": 0,
+                "max": 50
+              },
+              "label": {
+                "en": "Inverter ID",
+                "nl": "Inverter ID",
+                "de": "Wechselrichter-ID"
+              }
+            }
+          ]
+        }
+      ],
+      "id": "growattwithbatt"
+    },
+    {
+      "name": {
+        "en": "Growatt TL-X + Battery",
+        "de": "Growatt TL-X mit Batterie"
+      },
+      "class": "solarpanel",
+      "energy": {
+        "batteries": [
+          "OTHER"
+        ]
+      },
+      "capabilities": [
+        "measure_power",
+        "measure_power.input",
+        "measure_power.gridoutput",
+        "measure_power.pv1input",
+        "measure_power.pv2input",
+        "measure_current.phase1",
+        "measure_current.phase2",
+        "measure_current.phase3",
+        "measure_temperature.invertor",
+        "measure_temperature.battery",
+        "meter_power",
+        "meter_power.daily",
+        "meter_power.pv1TodayEnergy",
+        "meter_power.pv1TotalEnergy",
+        "meter_power.pv2TodayEnergy",
+        "meter_power.pv2TotalEnergy",
+        "battery",
+        "measure_battery",
+        "batterysoh",
+        "measure_power.batt_charge",
+        "measure_power.batt_discharge",
+        "batterystatus",
+        "batterycycles",
+        "measure_voltage.meter",
+        "measure_voltage.battery",
+        "exportlimitenabled",
+        "exportlimitpowerrate",
+        "priority",
+        "measure_power.houseload",
+        "meter_power.today_grid_import",
+        "meter_power.today_grid_export",
+        "meter_power.today_batt_output",
+        "meter_power.today_batt_input",
+        "meter_power.today_load",
+        "batterymaxsoc",
+        "batteryminsoc",
+        "period1",
+        "period2",
+        "period3",
+        "period4",
         "battacchargeswitch"
       ],
       "capabilitiesOptions": {
@@ -2428,8 +3905,222 @@
         "lan"
       ],
       "images": {
-        "small": "/drivers/growattwithbatt/assets/images/small.png",
-        "large": "/drivers/growattwithbatt/assets/images/large.png"
+        "small": "/drivers/growattwithbatt_tl/assets/images/small.png",
+        "large": "/drivers/growattwithbatt_tl/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "start"
+        }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Inverter settings",
+            "de": "Wechselrichtereinstellungen"
+          },
+          "children": [
+            {
+              "id": "address",
+              "type": "text",
+              "value": "0.0.0.0",
+              "label": {
+                "en": "IP Address",
+                "de": "IP-Adresse"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "value": 1502,
+              "step": 1,
+              "label": {
+                "en": "Port",
+                "de": "Port"
+              }
+            },
+            {
+              "id": "maxpeakpower",
+              "type": "number",
+              "value": 0,
+              "step": 1,
+              "label": {
+                "en": "Max peak power in W"
+              }
+            },
+            {
+              "id": "id",
+              "type": "number",
+              "value": 1,
+              "step": 1,
+              "attr": {
+                "min": 0,
+                "max": 50
+              },
+              "label": {
+                "en": "Inverter ID",
+                "nl": "Inverter ID",
+                "de": "Wechselrichter-ID"
+              }
+            }
+          ]
+        }
+      ],
+      "id": "growattwithbatt_tl"
+    },
+    {
+      "name": {
+        "en": "Huawei Inverter",
+        "de": "Huawei Wechselrichter"
+      },
+      "class": "solarpanel",
+      "energy": {
+        "batteries": [
+          "OTHER"
+        ]
+      },
+      "capabilities": [
+        "measure_power",
+        "measure_power.active_power",
+        "measure_current.phase1",
+        "measure_current.phase2",
+        "measure_current.phase3",
+        "measure_voltage.phase1",
+        "measure_voltage.phase2",
+        "measure_voltage.phase3",
+        "measure_temperature.invertor",
+        "meter_power",
+        "meter_power.daily",
+        "measure_voltage",
+        "measure_voltage.pv1",
+        "measure_voltage.pv2",
+        "measure_current.pv1",
+        "measure_current.pv2",
+        "huawei_status"
+      ],
+      "capabilitiesOptions": {
+        "measure_power": {
+          "decimals": 0,
+          "title": {
+            "en": "Solar Power",
+            "de": "Solarleistung"
+          }
+        },
+        "measure_power.active_power": {
+          "decimals": 0,
+          "title": {
+            "en": "Active Power"
+          }
+        },
+        "measure_current.phase1": {
+          "title": {
+            "en": "AC Current phase1",
+            "de": "AC-Strom Phase 1"
+          }
+        },
+        "measure_current.phase2": {
+          "title": {
+            "en": "AC Current phase2",
+            "de": "AC-Strom Phase 2"
+          }
+        },
+        "measure_current.phase3": {
+          "title": {
+            "en": "AC Current phase3",
+            "de": "AC-Strom Phase 3"
+          }
+        },
+        "measure_current.pv1": {
+          "title": {
+            "en": "AC Current pv1",
+            "de": "AC-Strom pv1"
+          }
+        },
+        "measure_current.pv2": {
+          "title": {
+            "en": "AC Current pv2",
+            "de": "AC-Strom pv2"
+          }
+        },
+        "measure_voltage": {
+          "title": {
+            "en": "Voltage",
+            "de": "Spannung"
+          }
+        },
+        "measure_voltage.phase1": {
+          "title": {
+            "en": "Voltage phase1",
+            "de": "Spannung Phase 1"
+          }
+        },
+        "measure_voltage.phase2": {
+          "title": {
+            "en": "Voltage phase2",
+            "de": "Spannung Phase 2"
+          }
+        },
+        "measure_voltage.phase3": {
+          "title": {
+            "en": "Voltage phase3",
+            "de": "Spannung Phase 3"
+          }
+        },
+        "measure_voltage.pv1": {
+          "title": {
+            "en": "Voltage pv1",
+            "de": "Spannung pv1"
+          }
+        },
+        "measure_voltage.pv2": {
+          "title": {
+            "en": "Voltage pv2",
+            "de": "Spannung pv2"
+          }
+        },
+        "measure_temperature.invertor": {
+          "title": {
+            "en": "Heatsink temperature",
+            "nl": "Heatsink temperatuur",
+            "de": "Kühlkörpertemperatur"
+          },
+          "decimals": 2
+        },
+        "meter_power": {
+          "title": {
+            "en": "Total Yield",
+            "nl": "Totale opbrengst",
+            "de": "Gesamtertrag"
+          },
+          "decimals": 2
+        },
+        "meter_power.daily": {
+          "title": {
+            "en": "Total Day Yield",
+            "nl": "Totale dag opbrengst",
+            "de": "Tagesgesamtertrag"
+          },
+          "decimals": 2,
+          "icon": "/assets/total_yield.svg"
+        },
+        "huawei_status": {
+          "title": {
+            "en": "Inverter status",
+            "de": "Status des Wechselrichters"
+          },
+          "icon": "/assets/operational_status.svg"
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "images": {
+        "small": "/drivers/huawei/assets/images/small.png",
+        "large": "/drivers/huawei/assets/images/large.png"
       },
       "pair": [
         {
@@ -2481,7 +4172,318 @@
           ]
         }
       ],
-      "id": "growattwithbatt"
+      "id": "huawei"
+    },
+    {
+      "name": {
+        "en": "Huawei Inverter + Battery",
+        "de": "Huawei Wechselrichter mit Batterie"
+      },
+      "class": "solarpanel",
+      "energy": {
+        "batteries": [
+          "OTHER"
+        ]
+      },
+      "capabilities": [
+        "measure_power",
+        "measure_power.active_power",
+        "battery",
+        "measure_current.grid_phase1",
+        "measure_current.grid_phase2",
+        "measure_current.grid_phase3",
+        "measure_voltage.grid_phase1",
+        "measure_voltage.grid_phase2",
+        "measure_voltage.grid_phase3",
+        "measure_temperature.invertor",
+        "meter_power",
+        "meter_power.daily",
+        "measure_voltage.pv1",
+        "measure_voltage.pv2",
+        "measure_current.pv1",
+        "measure_current.pv2",
+        "huawei_status",
+        "measure_battery",
+        "measure_power.batt_charge",
+        "measure_power.batt_discharge",
+        "measure_power.grid_phase1",
+        "measure_power.grid_phase2",
+        "measure_power.grid_phase3",
+        "measure_power.grid_active_power",
+        "meter_power.grid_import",
+        "meter_power.grid_export",
+        "meter_power.today_batt_output",
+        "meter_power.today_batt_input",
+        "storage_excess_pv_energy_use_in_tou",
+        "storage_force_charge_discharge",
+        "activepower_controlmode",
+        "remote_charge_discharge_control_mode",
+        "storage_working_mode_settings",
+        "measure_power.chargesetting",
+        "measure_power.dischargesetting"
+      ],
+      "capabilitiesOptions": {
+        "measure_power": {
+          "decimals": 0,
+          "title": {
+            "en": "Solar Power",
+            "de": "Solarleistung"
+          }
+        },
+        "measure_power.active_power": {
+          "decimals": 0,
+          "title": {
+            "en": "Active Power"
+          }
+        },
+        "measure_current.grid_phase1": {
+          "title": {
+            "en": "AC Current grid phase1",
+            "de": "AC-Strom grid Phase 1"
+          }
+        },
+        "measure_current.grid_phase2": {
+          "title": {
+            "en": "AC Current grid phase2",
+            "de": "AC-Strom grid Phase 2"
+          }
+        },
+        "measure_current.grid_phase3": {
+          "title": {
+            "en": "AC Current grid phase3",
+            "de": "AC-Strom grid Phase 3"
+          }
+        },
+        "measure_current.pv1": {
+          "title": {
+            "en": "AC Current pv1",
+            "de": "AC-Strom pv1"
+          }
+        },
+        "measure_current.pv2": {
+          "title": {
+            "en": "AC Current pv2",
+            "de": "AC-Strom pv2"
+          }
+        },
+        "measure_voltage.grid_phase1": {
+          "title": {
+            "en": "Voltage grid_phase1",
+            "de": "Spannung grid Phase 1"
+          }
+        },
+        "measure_voltage.grid_phase2": {
+          "title": {
+            "en": "Voltage grid phase2",
+            "de": "Spannung grid Phase 2"
+          }
+        },
+        "measure_voltage.grid_phase3": {
+          "title": {
+            "en": "Voltage grid phase3",
+            "de": "Spannung grid Phase 3"
+          }
+        },
+        "measure_voltage.pv1": {
+          "title": {
+            "en": "Voltage pv1",
+            "de": "Spannung pv1"
+          }
+        },
+        "measure_voltage.pv2": {
+          "title": {
+            "en": "Voltage pv2",
+            "de": "Spannung pv2"
+          }
+        },
+        "measure_temperature.invertor": {
+          "title": {
+            "en": "Heatsink temperature",
+            "nl": "Heatsink temperatuur",
+            "de": "Kühlkörpertemperatur"
+          },
+          "decimals": 2
+        },
+        "meter_power": {
+          "title": {
+            "en": "Total Yield",
+            "nl": "Totale opbrengst",
+            "de": "Gesamtertrag"
+          },
+          "decimals": 2
+        },
+        "meter_power.daily": {
+          "title": {
+            "en": "Total Day Yield",
+            "nl": "Totale dag opbrengst",
+            "de": "Tagesgesamtertrag"
+          },
+          "decimals": 2,
+          "icon": "/assets/total_yield.svg"
+        },
+        "huawei_status": {
+          "title": {
+            "en": "Inverter status",
+            "de": "Status des Wechselrichters"
+          },
+          "icon": "/assets/operational_status.svg"
+        },
+        "measure_power.batt_discharge": {
+          "decimals": 0,
+          "title": {
+            "en": "Battery Power discharge",
+            "de": "Batterieentladeleistung"
+          }
+        },
+        "measure_power.batt_charge": {
+          "decimals": 0,
+          "title": {
+            "en": "Battery Power charge",
+            "de": "Batterieladeleistung"
+          }
+        },
+        "measure_power.grid_phase1": {
+          "decimals": 0,
+          "title": {
+            "en": "Grid Power Phase 1"
+          }
+        },
+        "measure_power.grid_phase2": {
+          "decimals": 0,
+          "title": {
+            "en": "Grid Power Phase 2"
+          }
+        },
+        "measure_power.grid_phase3": {
+          "decimals": 0,
+          "title": {
+            "en": "Grid Power Phase 3"
+          }
+        },
+        "measure_power.grid_active_power": {
+          "decimals": 0,
+          "title": {
+            "en": "Grid Active Power"
+          }
+        },
+        "meter_power.grid_import": {
+          "title": {
+            "en": "Grid Import Yield",
+            "de": "Netzimport"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.grid_export": {
+          "title": {
+            "en": "Grid Export Yield",
+            "de": "Netzexport"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.today_batt_output": {
+          "title": {
+            "en": "Battery Output Day Yield",
+            "de": "Tagesgesamtentladung der Batterie"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.today_batt_input": {
+          "title": {
+            "en": "Battery Input Day Yield",
+            "de": "Tagesgesamtladung der Batterie"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "measure_power.chargesetting": {
+          "title": {
+            "en": "Charge setting",
+            "de": "Maximale Ladeleistung"
+          }
+        },
+        "measure_power.dischargesetting": {
+          "title": {
+            "en": "Discharge setting",
+            "de": "Maximale Entladeleistung"
+          }
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "images": {
+        "small": "/drivers/huaweiwithbatt/assets/images/small.png",
+        "large": "/drivers/huaweiwithbatt/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "start"
+        }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Inverter settings",
+            "de": "Wechselrichtereinstellungen"
+          },
+          "children": [
+            {
+              "id": "address",
+              "type": "text",
+              "value": "0.0.0.0",
+              "label": {
+                "en": "IP Address",
+                "de": "IP-Adresse"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "value": 1502,
+              "step": 1,
+              "label": {
+                "en": "Port",
+                "de": "Port"
+              }
+            },
+            {
+              "id": "id",
+              "type": "number",
+              "value": 1,
+              "step": 1,
+              "attr": {
+                "min": 0,
+                "max": 50
+              },
+              "label": {
+                "en": "Inverter ID",
+                "nl": "Inverter ID",
+                "de": "Wechselrichter-ID"
+              }
+            }
+          ]
+        }
+      ],
+      "id": "huaweiwithbatt"
     },
     {
       "name": {
@@ -2497,20 +4499,12 @@
       "capabilities": [
         "measure_power",
         "measure_current",
-        "measure_current.phase1",
-        "measure_current.phase2",
-        "measure_current.phase3",
-        "measure_voltage.phase1",
-        "measure_voltage.phase2",
-        "measure_voltage.phase3",
-        "measure_voltage.phase1n",
-        "measure_voltage.phase2n",
-        "measure_voltage.phase3n",
         "measure_temperature.invertor",
         "invertorstatus",
         "meter_power",
         "meter_power.daily",
-        "activepowerlimit"
+        "activepowerlimit",
+        "powerreduce"
       ],
       "capabilitiesOptions": {
         "measure_power": {
@@ -2649,6 +4643,15 @@
               }
             },
             {
+              "id": "maxpeakpower",
+              "type": "number",
+              "value": 0,
+              "step": 1,
+              "label": {
+                "en": "Max peak power in W"
+              }
+            },
+            {
               "id": "id",
               "type": "number",
               "value": 1,
@@ -2661,6 +4664,18 @@
                 "en": "Inverter ID",
                 "nl": "Inverter ID",
                 "de": "Wechselrichter-ID"
+              }
+            },
+            {
+              "id": "pollinginterval",
+              "type": "number",
+              "value": 28,
+              "min": 5,
+              "units": {
+                "en": "seconds"
+              },
+              "label": {
+                "en": "Polling interval"
               }
             }
           ]
@@ -2686,6 +4701,8 @@
         "measure_power.export",
         "measure_power.batt_charge",
         "measure_power.batt_discharge",
+        "measure_power.batt_charge2",
+        "measure_power.batt_discharge2",
         "measure_power.chargesetting",
         "measure_power.dischargesetting",
         "measure_current",
@@ -2705,23 +4722,30 @@
         "measure_voltage.meter_phase3",
         "measure_temperature.invertor",
         "measure_temperature.battery",
+        "measure_temperature.battery2",
         "meter_power",
         "meter_power.daily",
         "meter_power.export",
         "meter_power.import",
         "battery",
         "batterysoh",
+        "battery2",
+        "batterysoh2",
         "storagecontrolmode",
         "storagedefaultmode",
         "invertorstatus",
         "battstatus",
         "batterycap",
         "batterymaxcap",
+        "battstatus2",
+        "batterycap2",
+        "batterymaxcap2",
         "ownconsumption",
         "activepowerlimit",
         "limitcontrolmode",
         "exportcontrollimitmode",
-        "exportcontrolsitelimit"
+        "exportcontrolsitelimit",
+        "storageacchargepolicy"
       ],
       "capabilitiesOptions": {
         "measure_power": {
@@ -2785,6 +4809,20 @@
           "title": {
             "en": "Battery Power charge",
             "de": "Batterieladeleistung"
+          }
+        },
+        "measure_power.batt_discharge2": {
+          "decimals": 0,
+          "title": {
+            "en": "Battery 2 Power discharge",
+            "de": "Batterieentladeleistung 2"
+          }
+        },
+        "measure_power.batt_charge2": {
+          "decimals": 0,
+          "title": {
+            "en": "Battery 2 Power charge",
+            "de": "Batterieladeleistung 2"
           }
         },
         "measure_power.import": {
@@ -2861,6 +4899,13 @@
           "title": {
             "en": "Battery avg temperature",
             "de": "Durchschnittliche Batterietemperatur"
+          },
+          "decimals": 2
+        },
+        "measure_temperature.battery2": {
+          "title": {
+            "en": "Battery 2 avg temperature",
+            "de": "Durchschnittliche Batterie 2 temperatur"
           },
           "decimals": 2
         },
@@ -2955,6 +5000,15 @@
               }
             },
             {
+              "id": "maxpeakpower",
+              "type": "number",
+              "value": 0,
+              "step": 1,
+              "label": {
+                "en": "Max peak power in W"
+              }
+            },
+            {
               "id": "id",
               "type": "number",
               "value": 1,
@@ -2973,9 +5027,1079 @@
         }
       ],
       "id": "invertorwithbatt"
+    },
+    {
+      "name": {
+        "en": "Solax + Battery",
+        "de": "Solax mit Batterie"
+      },
+      "class": "solarpanel",
+      "energy": {
+        "batteries": [
+          "OTHER"
+        ]
+      },
+      "capabilities": [
+        "measure_power",
+        "measure_temperature.invertor",
+        "measure_power.battery",
+        "measure_power.pvinput",
+        "measure_power.pv1input",
+        "measure_power.pv2input",
+        "measure_power.gridoutput",
+        "measure_power.load",
+        "measure_current.batt_charge",
+        "measure_voltage.batt_charge",
+        "meter_power.today_batt_output",
+        "meter_power.today_batt_input",
+        "meter_power.export",
+        "meter_power.import",
+        "meter_power.export_daily",
+        "meter_power.import_daily",
+        "meter_power",
+        "meter_power.daily",
+        "measure_current.meter_phase1",
+        "measure_current.meter_phase2",
+        "measure_current.meter_phase3",
+        "measure_voltage.meter_phase1",
+        "measure_voltage.meter_phase2",
+        "measure_voltage.meter_phase3",
+        "measure_power.meter_phase1",
+        "measure_power.meter_phase2",
+        "measure_power.meter_phase3",
+        "battery",
+        "batterysoh",
+        "measure_battery",
+        "storage_force_charge_discharge2",
+        "solarcharger_use_mode"
+      ],
+      "capabilitiesOptions": {
+        "measure_current.batt_charge": {
+          "title": {
+            "en": "Battery charge current"
+          }
+        },
+        "measure_voltage.batt_charge": {
+          "title": {
+            "en": "Battery charge voltage"
+          },
+          "decimals": 1
+        },
+        "measure_power": {
+          "decimals": 0,
+          "title": {
+            "en": "Solar + Batt Power",
+            "de": "Solar- und Batterie-Leistung"
+          }
+        },
+        "measure_power.battery": {
+          "decimals": 0,
+          "title": {
+            "en": "Battery Power",
+            "de": "Batterieleistung"
+          }
+        },
+        "measure_temperature.invertor": {
+          "title": {
+            "en": "Heatsink temperature",
+            "nl": "Heatsink temperatuur",
+            "de": "Kühlkörpertemperatur"
+          },
+          "decimals": 2
+        },
+        "measure_power.load": {
+          "decimals": 0,
+          "title": {
+            "en": "House Load Power"
+          }
+        },
+        "measure_power.pvinput": {
+          "decimals": 0,
+          "title": {
+            "en": "PV input",
+            "de": "PV Eingang"
+          }
+        },
+        "measure_power.pv1input": {
+          "decimals": 0,
+          "title": {
+            "en": "PV1 input",
+            "de": "PV-Strang 1 Eingang"
+          }
+        },
+        "measure_power.pv2input": {
+          "decimals": 0,
+          "title": {
+            "en": "PV2 input",
+            "de": "PV-Strang 2 Eingang"
+          }
+        },
+        "measure_power.gridoutput": {
+          "decimals": 0,
+          "title": {
+            "en": "Grid in/output",
+            "de": "Netz im/export"
+          }
+        },
+        "meter_power.today_batt_output": {
+          "title": {
+            "en": "Battery Output Day Yield",
+            "de": "Tagesgesamtentladung der Batterie"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.today_batt_input": {
+          "title": {
+            "en": "Battery Input Day Yield",
+            "de": "Tagesgesamtladung der Batterie"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.import": {
+          "title": {
+            "en": "Total Import",
+            "nl": "Totale Import",
+            "de": "Gesamtimport"
+          },
+          "decimals": 2,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.export": {
+          "title": {
+            "en": "Total Export",
+            "nl": "Totale Export",
+            "de": "Gesamtexport"
+          },
+          "decimals": 2,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.import_daily": {
+          "title": {
+            "en": "Total Day Import",
+            "nl": "Totale Dag Import",
+            "de": "Gesamttagesimport"
+          },
+          "decimals": 2,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.export_daily": {
+          "title": {
+            "en": "Total Day Export",
+            "nl": "Totale Dag Export",
+            "de": "Gesamttagesexport"
+          },
+          "decimals": 2,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power": {
+          "title": {
+            "en": "Total Yield",
+            "nl": "Totale opbrengst",
+            "de": "Gesamtertrag"
+          },
+          "decimals": 2
+        },
+        "meter_power.daily": {
+          "title": {
+            "en": "Total Day Yield",
+            "nl": "Totale dag opbrengst",
+            "de": "Tagesgesamtertrag"
+          },
+          "decimals": 2,
+          "icon": "/assets/total_yield.svg"
+        },
+        "measure_voltage.meter_phase1": {
+          "title": {
+            "en": "Meter Voltage phase1",
+            "de": "Zähler Spannung Phase 1"
+          }
+        },
+        "measure_voltage.meter_phase2": {
+          "title": {
+            "en": "Meter Voltage phase2",
+            "de": "Zähler Spannung Phase 2"
+          }
+        },
+        "measure_voltage.meter_phase3": {
+          "title": {
+            "en": "Meter Voltage phase3",
+            "de": "Zähler Spannung Phase 3"
+          }
+        },
+        "measure_current.meter_phase1": {
+          "title": {
+            "en": "Meter AC Current phase1",
+            "de": "Zähler AC-Strom Phase 1"
+          }
+        },
+        "measure_current.meter_phase2": {
+          "title": {
+            "en": "Meter AC Current phase2",
+            "de": "Zähler AC-Strom Phase 2"
+          }
+        },
+        "measure_current.meter_phase3": {
+          "title": {
+            "en": "Meter AC Current phase3",
+            "de": "Zähler AC-Strom Phase 3"
+          }
+        },
+        "measure_power.meter_phase1": {
+          "title": {
+            "en": "Meter power phase1",
+            "de": "Zähler power Phase 1"
+          }
+        },
+        "measure_power.meter_phase2": {
+          "title": {
+            "en": "Meter power phase2",
+            "de": "Zähler power Phase 2"
+          }
+        },
+        "measure_power.meter_phase3": {
+          "title": {
+            "en": "Meter power phase3",
+            "de": "Zähler power Phase 3"
+          }
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "images": {
+        "small": "/drivers/solaxwithbatt/assets/images/small.png",
+        "large": "/drivers/solaxwithbatt/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "start"
+        }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Inverter settings",
+            "de": "Wechselrichtereinstellungen"
+          },
+          "children": [
+            {
+              "id": "address",
+              "type": "text",
+              "value": "0.0.0.0",
+              "label": {
+                "en": "IP Address",
+                "de": "IP-Adresse"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "value": 1502,
+              "step": 1,
+              "label": {
+                "en": "Port",
+                "de": "Port"
+              }
+            },
+            {
+              "id": "id",
+              "type": "number",
+              "value": 1,
+              "step": 1,
+              "attr": {
+                "min": 0,
+                "max": 50
+              },
+              "label": {
+                "en": "Inverter ID",
+                "nl": "Inverter ID",
+                "de": "Wechselrichter-ID"
+              }
+            }
+          ]
+        }
+      ],
+      "id": "solaxwithbatt"
+    },
+    {
+      "name": {
+        "en": "Sungrow Hybrid + Battery",
+        "de": "Sungrow Hybrid mit Batterie"
+      },
+      "class": "solarpanel",
+      "energy": {
+        "batteries": [
+          "OTHER"
+        ]
+      },
+      "capabilities": [
+        "measure_power",
+        "measure_temperature.invertor",
+        "measure_temperature.battery",
+        "measure_power.grid_import",
+        "measure_power.grid_export",
+        "measure_power.load",
+        "measure_power.battery",
+        "meter_power",
+        "meter_power.daily",
+        "battery",
+        "measure_battery",
+        "batterysoh",
+        "activepowerlimit",
+        "meter_power.today_grid_import",
+        "meter_power.today_grid_export",
+        "meter_power.grid_import",
+        "meter_power.grid_export",
+        "meter_power.today_batt_output",
+        "meter_power.battery_output",
+        "meter_power.today_batt_input",
+        "meter_power.battery_input",
+        "status_power_generated_from_pv",
+        "status_charging",
+        "status_discharging",
+        "status_load_is_active",
+        "status_exporting_power_to_grid",
+        "status_importing_power_from_grid",
+        "status_power_generated_from_load",
+        "exportlimitenabled",
+        "exportcontrolsitelimit",
+        "emsmodeselection",
+        "chargedischargecommand",
+        "charge_discharge_power",
+        "batteryminsoc",
+        "batterymaxsoc"
+      ],
+      "capabilitiesOptions": {
+        "measure_power": {
+          "decimals": 0,
+          "title": {
+            "en": "Solar Power",
+            "de": "Solarleistung"
+          }
+        },
+        "measure_power.battery": {
+          "decimals": 0,
+          "title": {
+            "en": "Battery Power",
+            "de": "Batterieleistung"
+          }
+        },
+        "measure_temperature.invertor": {
+          "title": {
+            "en": "Heatsink temperature",
+            "nl": "Heatsink temperatuur",
+            "de": "Kühlkörpertemperatur"
+          },
+          "decimals": 2
+        },
+        "measure_temperature.battery": {
+          "title": {
+            "en": "Battery temperature",
+            "de": "Batterietemperatur"
+          },
+          "decimals": 2
+        },
+        "meter_power": {
+          "title": {
+            "en": "Total Yield",
+            "nl": "Totale opbrengst",
+            "de": "Gesamtertrag"
+          },
+          "decimals": 1
+        },
+        "meter_power.daily": {
+          "title": {
+            "en": "Total Day Yield",
+            "nl": "Totale dag opbrengst",
+            "de": "Tagesgesamtertrag"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "measure_power.grid_import": {
+          "title": {
+            "en": "Grid Import",
+            "de": "Netzimport"
+          }
+        },
+        "measure_power.grid_export": {
+          "title": {
+            "en": "Grid Export",
+            "de": "Netztexport"
+          }
+        },
+        "measure_power.load": {
+          "title": {
+            "en": "Load Yield",
+            "de": "Verbrauch"
+          }
+        },
+        "meter_power.today_grid_import": {
+          "title": {
+            "en": "Grid Import Day Yield",
+            "de": "Netztagesimport"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.today_grid_export": {
+          "title": {
+            "en": "Grid Export Day Yield",
+            "de": "Netztagesexport"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.grid_import": {
+          "title": {
+            "en": "Grid Import",
+            "de": "Netzimport"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.grid_export": {
+          "title": {
+            "en": "Grid Export",
+            "de": "Netztexport"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.battery_input": {
+          "title": {
+            "en": "Battery input",
+            "de": "Batterie input"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.battery_output": {
+          "title": {
+            "en": "Battery output",
+            "de": "Batterie output"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.today_batt_output": {
+          "title": {
+            "en": "Battery Output Day Yield",
+            "de": "Tagesgesamtentladung der Batterie"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.today_batt_input": {
+          "title": {
+            "en": "Battery Input Day Yield",
+            "de": "Tagesgesamtladung der Batterie"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "exportcontrolsitelimit": {
+          "title": {
+            "en": "Export Limit power",
+            "de": "Standortbeschränkung der Exportkontrolle"
+          }
+        },
+        "batteryminsoc": {
+          "min": 0,
+          "max": 50
+        },
+        "batterymaxsoc": {
+          "min": 70,
+          "max": 100
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "images": {
+        "small": "/drivers/sungrowhybirdwithbatt/assets/images/small.png",
+        "large": "/drivers/sungrowhybirdwithbatt/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "start"
+        }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Inverter settings",
+            "de": "Wechselrichtereinstellungen"
+          },
+          "children": [
+            {
+              "id": "address",
+              "type": "text",
+              "value": "0.0.0.0",
+              "label": {
+                "en": "IP Address",
+                "de": "IP-Adresse"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "value": 1502,
+              "step": 1,
+              "label": {
+                "en": "Port",
+                "de": "Port"
+              }
+            },
+            {
+              "id": "id",
+              "type": "number",
+              "value": 1,
+              "step": 1,
+              "attr": {
+                "min": 0,
+                "max": 50
+              },
+              "label": {
+                "en": "Inverter ID",
+                "nl": "Inverter ID",
+                "de": "Wechselrichter-ID"
+              }
+            }
+          ]
+        }
+      ],
+      "id": "sungrowhybirdwithbatt"
+    },
+    {
+      "name": {
+        "en": "Wattsonic Inverter",
+        "de": "Wattsonic Wechselrichter"
+      },
+      "class": "solarpanel",
+      "energy": {
+        "batteries": [
+          "OTHER"
+        ]
+      },
+      "capabilities": [
+        "measure_power",
+        "measure_power.pv1input",
+        "measure_power.pv2input",
+        "measure_current.phase1",
+        "measure_current.phase2",
+        "measure_current.phase3",
+        "measure_temperature.invertor",
+        "meter_power",
+        "meter_power.daily"
+      ],
+      "capabilitiesOptions": {
+        "measure_power": {
+          "decimals": 0,
+          "title": {
+            "en": "Solar Power",
+            "de": "Solarleistung"
+          }
+        },
+        "measure_power.pv1input": {
+          "decimals": 0,
+          "title": {
+            "en": "PV1 input",
+            "de": "PV-Strang 1 Eingang"
+          }
+        },
+        "measure_power.pv2input": {
+          "decimals": 0,
+          "title": {
+            "en": "PV2 input",
+            "de": "PV-Strang 2 Eingang"
+          }
+        },
+        "measure_current.phase1": {
+          "title": {
+            "en": "AC Current phase1",
+            "de": "AC-Strom Phase 1"
+          }
+        },
+        "measure_current.phase2": {
+          "title": {
+            "en": "AC Current phase2",
+            "de": "AC-Strom Phase 2"
+          }
+        },
+        "measure_current.phase3": {
+          "title": {
+            "en": "AC Current phase3",
+            "de": "AC-Strom Phase 3"
+          }
+        },
+        "measure_temperature.invertor": {
+          "title": {
+            "en": "Heatsink temperature",
+            "nl": "Heatsink temperatuur",
+            "de": "Kühlkörpertemperatur"
+          },
+          "decimals": 2
+        },
+        "meter_power": {
+          "title": {
+            "en": "Total Yield",
+            "nl": "Totale opbrengst",
+            "de": "Gesamtertrag"
+          },
+          "decimals": 1
+        },
+        "meter_power.daily": {
+          "title": {
+            "en": "Total Day Yield",
+            "nl": "Totale dag opbrengst",
+            "de": "Tagesgesamtertrag"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "images": {
+        "small": "/drivers/wattsonic/assets/images/small.png",
+        "large": "/drivers/wattsonic/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "start"
+        }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Inverter settings",
+            "de": "Wechselrichtereinstellungen"
+          },
+          "children": [
+            {
+              "id": "address",
+              "type": "text",
+              "value": "0.0.0.0",
+              "label": {
+                "en": "IP Address",
+                "de": "IP-Adresse"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "value": 1502,
+              "step": 1,
+              "label": {
+                "en": "Port",
+                "de": "Port"
+              }
+            },
+            {
+              "id": "id",
+              "type": "number",
+              "value": 1,
+              "step": 1,
+              "attr": {
+                "min": 0,
+                "max": 50
+              },
+              "label": {
+                "en": "Inverter ID",
+                "nl": "Inverter ID",
+                "de": "Wechselrichter-ID"
+              }
+            }
+          ]
+        }
+      ],
+      "id": "wattsonic"
+    },
+    {
+      "name": {
+        "en": "Wattsonic + Battery",
+        "de": "Wattsonic mit Batterie"
+      },
+      "class": "solarpanel",
+      "energy": {
+        "batteries": [
+          "OTHER"
+        ]
+      },
+      "capabilities": [
+        "measure_power",
+        "measure_power.gridoutput",
+        "measure_power.pv1input",
+        "measure_power.pv2input",
+        "measure_power.batt_charge",
+        "measure_power.batt_discharge",
+        "measure_current.phase1",
+        "measure_current.phase2",
+        "measure_current.phase3",
+        "measure_temperature.invertor",
+        "measure_temperature.battery",
+        "meter_power",
+        "meter_power.daily",
+        "battery",
+        "measure_battery",
+        "batterysoh",
+        "meter_power.today_grid_import",
+        "meter_power.today_grid_export",
+        "meter_power.grid_import",
+        "meter_power.grid_export",
+        "meter_power.today_batt_output",
+        "meter_power.today_batt_input",
+        "meter_power.battery_input",
+        "meter_power.battery_output",
+        "meter_power.today_load",
+        "batterystatus",
+        "hybridinvertermode"
+      ],
+      "capabilitiesOptions": {
+        "measure_power": {
+          "decimals": 0,
+          "title": {
+            "en": "Solar Power",
+            "de": "Solarleistung"
+          }
+        },
+        "measure_power.pv1input": {
+          "decimals": 0,
+          "title": {
+            "en": "PV1 input",
+            "de": "PV-Strang 1 Eingang"
+          }
+        },
+        "measure_power.pv2input": {
+          "decimals": 0,
+          "title": {
+            "en": "PV2 input",
+            "de": "PV-Strang 2 Eingang"
+          }
+        },
+        "measure_power.gridoutput": {
+          "decimals": 0,
+          "title": {
+            "en": "Grid output",
+            "de": "Netzexport"
+          }
+        },
+        "measure_power.batt_discharge": {
+          "decimals": 0,
+          "title": {
+            "en": "Battery Power discharge",
+            "de": "Batterieentladeleistung"
+          }
+        },
+        "measure_power.batt_charge": {
+          "decimals": 0,
+          "title": {
+            "en": "Battery Power charge",
+            "de": "Batterieladeleistung"
+          }
+        },
+        "measure_current.phase1": {
+          "title": {
+            "en": "AC Current phase1",
+            "de": "AC-Strom Phase 1"
+          }
+        },
+        "measure_current.phase2": {
+          "title": {
+            "en": "AC Current phase2",
+            "de": "AC-Strom Phase 2"
+          }
+        },
+        "measure_current.phase3": {
+          "title": {
+            "en": "AC Current phase3",
+            "de": "AC-Strom Phase 3"
+          }
+        },
+        "measure_temperature.invertor": {
+          "title": {
+            "en": "Heatsink temperature",
+            "nl": "Heatsink temperatuur",
+            "de": "Kühlkörpertemperatur"
+          },
+          "decimals": 2
+        },
+        "measure_temperature.battery": {
+          "title": {
+            "en": "Battery temperature",
+            "de": "Batterietemperatur"
+          },
+          "decimals": 2
+        },
+        "meter_power": {
+          "title": {
+            "en": "Total Yield",
+            "nl": "Totale opbrengst",
+            "de": "Gesamtertrag"
+          },
+          "decimals": 1
+        },
+        "meter_power.daily": {
+          "title": {
+            "en": "Total Day Yield",
+            "nl": "Totale dag opbrengst",
+            "de": "Tagesgesamtertrag"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.today_grid_import": {
+          "title": {
+            "en": "Grid Import Day Yield",
+            "de": "Netztagesimport"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.today_grid_export": {
+          "title": {
+            "en": "Grid Export Day Yield",
+            "de": "Netztagesexport"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.battery_input": {
+          "title": {
+            "en": "Battery input",
+            "de": "Batterie input"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.battery_output": {
+          "title": {
+            "en": "Battery output",
+            "de": "Batterie output"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.grid_import": {
+          "title": {
+            "en": "Grid Import",
+            "de": "Netzimport"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.grid_export": {
+          "title": {
+            "en": "Grid Export",
+            "de": "Netztexport"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.today_batt_output": {
+          "title": {
+            "en": "Battery Output Day Yield",
+            "de": "Tagesgesamtentladung der Batterie"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.today_batt_input": {
+          "title": {
+            "en": "Battery Input Day Yield",
+            "de": "Tagesgesamtladung der Batterie"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        },
+        "meter_power.today_load": {
+          "title": {
+            "en": "Load Day Yield",
+            "de": "Tagesgesamtverbrauch"
+          },
+          "units": {
+            "en": "kWh"
+          },
+          "decimals": 1,
+          "icon": "/assets/total_yield.svg"
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "images": {
+        "small": "/drivers/wattsonicwithbatt/assets/images/small.png",
+        "large": "/drivers/wattsonicwithbatt/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "start"
+        }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Inverter settings",
+            "de": "Wechselrichtereinstellungen"
+          },
+          "children": [
+            {
+              "id": "address",
+              "type": "text",
+              "value": "0.0.0.0",
+              "label": {
+                "en": "IP Address",
+                "de": "IP-Adresse"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "value": 1502,
+              "step": 1,
+              "label": {
+                "en": "Port",
+                "de": "Port"
+              }
+            },
+            {
+              "id": "id",
+              "type": "number",
+              "value": 1,
+              "step": 1,
+              "attr": {
+                "min": 0,
+                "max": 50
+              },
+              "label": {
+                "en": "Inverter ID",
+                "nl": "Inverter ID",
+                "de": "Wechselrichter-ID"
+              }
+            }
+          ]
+        }
+      ],
+      "id": "wattsonicwithbatt"
     }
   ],
   "capabilities": {
+    "activepower_controlmode": {
+      "type": "enum",
+      "title": {
+        "en": "Active power control mode"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false,
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "Unlimited"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "DI Active scheduling"
+          }
+        },
+        {
+          "id": "5",
+          "title": {
+            "en": "Zero power grid connectionn"
+          }
+        },
+        {
+          "id": "6",
+          "title": {
+            "en": "Power limited grid connection W"
+          }
+        },
+        {
+          "id": "7",
+          "title": {
+            "en": "Power limited grid connection %"
+          }
+        }
+      ]
+    },
     "activepowerlimit": {
       "type": "number",
       "title": {
@@ -3045,11 +6169,52 @@
       "setable": false,
       "uiComponent": "sensor"
     },
+    "battery2": {
+      "type": "number",
+      "title": {
+        "en": "Battery 2",
+        "nl": "Accuniveau 2",
+        "de": "Batteriestand 2"
+      },
+      "insights": false,
+      "icon": "/assets/battery.svg",
+      "units": {
+        "en": "%"
+      },
+      "min": 0,
+      "max": 100,
+      "desc": {
+        "en": "Battery charge in percentage (%)",
+        "nl": "Accuniveau in procenten (%)",
+        "de": "Batteriestand in Prozent (%)"
+      },
+      "chartType": "spline",
+      "decimals": 2,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
+    },
     "batterycap": {
       "type": "number",
       "title": {
         "en": "Battery Capacity",
         "de": "Batteriekapazität"
+      },
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "decimals": 1,
+      "uiComponent": "sensor",
+      "icon": "/assets/battery_capacity.svg",
+      "units": {
+        "en": "kWh"
+      }
+    },
+    "batterycap2": {
+      "type": "number",
+      "title": {
+        "en": "Battery 2 Capacity",
+        "de": "Batteriekapazität 2"
       },
       "getable": true,
       "setable": false,
@@ -3079,6 +6244,22 @@
       "title": {
         "en": "Battery Max capacity",
         "de": "Maximale Batteriekapazität"
+      },
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "decimals": 1,
+      "uiComponent": "sensor",
+      "icon": "/assets/battery_capacity.svg",
+      "units": {
+        "en": "kWh"
+      }
+    },
+    "batterymaxcap2": {
+      "type": "number",
+      "title": {
+        "en": "Battery 2 Max capacity",
+        "de": "Maximale Batteriekapazität 2"
       },
       "getable": true,
       "setable": false,
@@ -3146,6 +6327,24 @@
         "nl": "%"
       }
     },
+    "batterysoh2": {
+      "type": "number",
+      "title": {
+        "en": "Battery 2 Health",
+        "nl": "Batterij 2 SoH",
+        "de": "Batteriezustand 2"
+      },
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "decimals": 1,
+      "uiComponent": "sensor",
+      "icon": "/assets/battery.svg",
+      "units": {
+        "en": "%",
+        "nl": "%"
+      }
+    },
     "batterystatus": {
       "type": "number",
       "title": {
@@ -3168,7 +6367,8 @@
       "getable": true,
       "setable": false,
       "uiComponent": "sensor",
-      "uiQuickAction": false
+      "uiQuickAction": false,
+      "icon": "/assets/clock.svg"
     },
     "battstatus": {
       "type": "enum",
@@ -3243,6 +6443,170 @@
           "title": {
             "en": "Unknown",
             "de": "Unbekannt"
+          }
+        }
+      ]
+    },
+    "battstatus2": {
+      "type": "enum",
+      "title": {
+        "en": "Battery 2 status",
+        "de": "Batteriestatus 2"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false,
+      "icon": "/assets/operational_status.svg",
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "Off",
+            "de": "Aus"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "Standby",
+            "de": "Bereitschaft"
+          }
+        },
+        {
+          "id": "2",
+          "title": {
+            "en": "Init",
+            "de": "Initialisierung"
+          }
+        },
+        {
+          "id": "3",
+          "title": {
+            "en": "Charge",
+            "de": "Ladung"
+          }
+        },
+        {
+          "id": "4",
+          "title": {
+            "en": "Discharge",
+            "de": "Entladung"
+          }
+        },
+        {
+          "id": "5",
+          "title": {
+            "en": "Fault",
+            "de": "Störung"
+          }
+        },
+        {
+          "id": "6",
+          "title": {
+            "en": "Idle",
+            "de": "Leerlauf"
+          }
+        },
+        {
+          "id": "7",
+          "title": {
+            "en": "Idle",
+            "de": "Leerlauf"
+          }
+        },
+        {
+          "id": "10",
+          "title": {
+            "en": "Unknown",
+            "de": "Unbekannt"
+          }
+        }
+      ]
+    },
+    "charge_discharge_power": {
+      "type": "number",
+      "title": {
+        "en": "charge or discharge power"
+      },
+      "getable": true,
+      "setable": false,
+      "decimals": 0,
+      "uiComponent": "sensor",
+      "insights": true,
+      "units": {
+        "en": "W",
+        "nl": "W"
+      }
+    },
+    "chargedischargecommand": {
+      "type": "enum",
+      "title": {
+        "en": "Charge/discharge command"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "picker",
+      "uiQuickAction": false,
+      "values": [
+        {
+          "id": "170",
+          "title": {
+            "en": "Charge"
+          }
+        },
+        {
+          "id": "187",
+          "title": {
+            "en": "Discharge"
+          }
+        },
+        {
+          "id": "204",
+          "title": {
+            "en": "Stop"
+          }
+        }
+      ]
+    },
+    "emsmodeselection": {
+      "type": "enum",
+      "title": {
+        "en": "Hybrid Inverter Working Mode"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "picker",
+      "uiQuickAction": false,
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "Self-consumption mode"
+          }
+        },
+        {
+          "id": "2",
+          "title": {
+            "en": "Forced mode (charge/discharge/stop)"
+          }
+        },
+        {
+          "id": "3",
+          "title": {
+            "en": "External EMS mode"
+          }
+        },
+        {
+          "id": "4",
+          "title": {
+            "en": "VPP"
+          }
+        },
+        {
+          "id": "8",
+          "title": {
+            "en": "MicroGrid"
           }
         }
       ]
@@ -3363,7 +6727,76 @@
       "getable": true,
       "setable": false,
       "uiComponent": "sensor",
-      "uiQuickAction": false
+      "uiQuickAction": false,
+      "icon": "/assets/clock.svg"
+    },
+    "huawei_status": {
+      "type": "string",
+      "title": {
+        "en": "Status"
+      },
+      "getable": true,
+      "setable": false
+    },
+    "hybridinvertermode": {
+      "type": "enum",
+      "title": {
+        "en": "Hybrid Inverter Working Mode"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false,
+      "values": [
+        {
+          "id": "11",
+          "title": {
+            "en": "General Mode"
+          }
+        },
+        {
+          "id": "12",
+          "title": {
+            "en": "Economic Mode"
+          }
+        },
+        {
+          "id": "13",
+          "title": {
+            "en": "UPS Mode"
+          }
+        },
+        {
+          "id": "2",
+          "title": {
+            "en": "Off Grid Mode"
+          }
+        },
+        {
+          "id": "31",
+          "title": {
+            "en": "EMS_ACCtrlMode"
+          }
+        },
+        {
+          "id": "32",
+          "title": {
+            "en": "EMS_GeneralMode"
+          }
+        },
+        {
+          "id": "33",
+          "title": {
+            "en": "EMS_BattCtrlMode"
+          }
+        },
+        {
+          "id": "34",
+          "title": {
+            "en": "EMS_OffGridMode"
+          }
+        }
+      ]
     },
     "invertorstatus": {
       "type": "enum",
@@ -3468,6 +6901,13 @@
           }
         },
         {
+          "id": "2",
+          "title": {
+            "en": "Production Limitation",
+            "de": "Production beschränkung"
+          }
+        },
+        {
           "id": "11",
           "title": {
             "en": "Import Control",
@@ -3485,7 +6925,8 @@
       "getable": true,
       "setable": false,
       "uiComponent": "sensor",
-      "uiQuickAction": false
+      "uiQuickAction": false,
+      "icon": "/assets/clock.svg"
     },
     "measure_current": {
       "type": "number",
@@ -3631,6 +7072,70 @@
         "nl": "W"
       }
     },
+    "period1": {
+      "type": "string",
+      "title": {
+        "en": "Time slot 1",
+        "de": "Zeitfenster 1:"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false,
+      "icon": "/assets/clock.svg"
+    },
+    "period2": {
+      "type": "string",
+      "title": {
+        "en": "Time slot 2",
+        "de": "Zeitfenster 2:"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false,
+      "icon": "/assets/clock.svg"
+    },
+    "period3": {
+      "type": "string",
+      "title": {
+        "en": "Time slot 3",
+        "de": "Zeitfenster 3:"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false,
+      "icon": "/assets/clock.svg"
+    },
+    "period4": {
+      "type": "string",
+      "title": {
+        "en": "Time slot 4",
+        "de": "Zeitfenster 4:"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false,
+      "icon": "/assets/clock.svg"
+    },
+    "powerreduce": {
+      "type": "number",
+      "title": {
+        "en": "Power reduce limit"
+      },
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "uiComponent": "sensor",
+      "units": {
+        "en": "%"
+      },
+      "decimals": 0,
+      "min": 0,
+      "max": 100
+    },
     "priority": {
       "type": "enum",
       "title": {
@@ -3683,6 +7188,320 @@
       "decimals": 0,
       "min": 0,
       "max": 100
+    },
+    "remote_charge_discharge_control_mode": {
+      "type": "enum",
+      "title": {
+        "en": "Remote charge/discharge control mode"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false,
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "Local control"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "Maximum self consumption"
+          }
+        },
+        {
+          "id": "2",
+          "title": {
+            "en": "fully fed to grid"
+          }
+        },
+        {
+          "id": "3",
+          "title": {
+            "en": "TOU"
+          }
+        },
+        {
+          "id": "4",
+          "title": {
+            "en": "AI control"
+          }
+        }
+      ]
+    },
+    "solarcharger_use_mode": {
+      "type": "enum",
+      "title": {
+        "en": "Use mode"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "picker",
+      "uiQuickAction": false,
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "Self use mode"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "Feedin Priority"
+          }
+        },
+        {
+          "id": "2",
+          "title": {
+            "en": "Back up mode"
+          }
+        },
+        {
+          "id": "3",
+          "title": {
+            "en": "Manual mode"
+          }
+        }
+      ]
+    },
+    "status_charging": {
+      "type": "boolean",
+      "title": {
+        "en": "Charging"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "toggle"
+    },
+    "status_discharging": {
+      "type": "boolean",
+      "title": {
+        "en": "Discharging"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "toggle"
+    },
+    "status_exporting_power_to_grid": {
+      "type": "boolean",
+      "title": {
+        "en": "Power feed-in the grid"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "toggle"
+    },
+    "status_importing_power_from_grid": {
+      "type": "boolean",
+      "title": {
+        "en": "Importing power from grid"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "toggle"
+    },
+    "status_load_is_active": {
+      "type": "boolean",
+      "title": {
+        "en": "Load is active"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "toggle"
+    },
+    "status_power_generated_from_load": {
+      "type": "boolean",
+      "title": {
+        "en": "Power generated from Load"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "toggle"
+    },
+    "status_power_generated_from_pv": {
+      "type": "boolean",
+      "title": {
+        "en": "Power generated from PV"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "toggle"
+    },
+    "storage_excess_pv_energy_use_in_tou": {
+      "type": "enum",
+      "title": {
+        "en": "Storage excess pv"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false,
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "Fed to grid"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "Charge"
+          }
+        }
+      ]
+    },
+    "storage_force_charge_discharge": {
+      "type": "enum",
+      "title": {
+        "en": "Storage forcible charge/discharge"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false,
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "Stop"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "Charge"
+          }
+        },
+        {
+          "id": "2",
+          "title": {
+            "en": "Discharge"
+          }
+        }
+      ]
+    },
+    "storage_force_charge_discharge2": {
+      "type": "enum",
+      "title": {
+        "en": "Storage forcible charge/discharge"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "picker",
+      "uiQuickAction": false,
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "Stop"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "Charge"
+          }
+        },
+        {
+          "id": "2",
+          "title": {
+            "en": "Discharge"
+          }
+        }
+      ]
+    },
+    "storage_working_mode_settings": {
+      "type": "enum",
+      "title": {
+        "en": "Storage working mode setting"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "uiQuickAction": false,
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "Adaptive"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "Fixed charge/discharge"
+          }
+        },
+        {
+          "id": "2",
+          "title": {
+            "en": "Maximum self consumption"
+          }
+        },
+        {
+          "id": "3",
+          "title": {
+            "en": "Time of use LG"
+          }
+        },
+        {
+          "id": "4",
+          "title": {
+            "en": "Fully fed to grid"
+          }
+        },
+        {
+          "id": "5",
+          "title": {
+            "en": "Time of use LUNA2000"
+          }
+        }
+      ]
+    },
+    "storageacchargepolicy": {
+      "type": "enum",
+      "title": {
+        "en": "Storage AC Charge Policy",
+        "de": "Speicher-AC-Laderegelung"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "picker",
+      "uiQuickAction": false,
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "Disabled",
+            "de": "Deaktiviert"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "Always allowed",
+            "de": "Immer erlaubt"
+          }
+        },
+        {
+          "id": "2",
+          "title": {
+            "en": "Fixed Energy Limit",
+            "de": "Festes Energielimit"
+          }
+        },
+        {
+          "id": "3",
+          "title": {
+            "en": "Percent of Production",
+            "de": "Prozent der Produktion"
+          }
+        }
+      ]
     },
     "storagecontrolmode": {
       "type": "enum",

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkBattery = exports.checkMeter = exports.checkHoldingRegisterGrowatt = exports.checkRegisterGrowatt = exports.checkRegister = void 0;
+exports.checkBattery = exports.checkMeter = exports.checkHoldingRegisterSungrow = exports.checkRegisterSungrow = exports.checkHoldingRegisterGrowatt = exports.checkHoldingRegisterHuawei = exports.checkHoldingRegisterWattsonic = exports.checkinputRegisterSolax = exports.checkholdingRegisterSolax = exports.checkRegisterGrowatt = exports.checkRegister = void 0;
 async function checkRegister(registers, client) {
     let result = {};
     for (const [key, value] of Object.entries(registers)) {
@@ -53,7 +53,7 @@ async function checkRegister(registers, client) {
                     console.log(key + ": type not found " + value[2]);
                     break;
             }
-            if (resultValue) {
+            if (resultValue && resultValue !== undefined) {
                 measurement.value = resultValue;
             }
             result[key] = measurement;
@@ -95,7 +95,7 @@ async function checkRegisterGrowatt(registers, client) {
                     console.log(key + ": type not found " + value[2]);
                     break;
             }
-            if (resultValue) {
+            if (resultValue && resultValue !== undefined) {
                 measurement.value = resultValue;
             }
             result[key] = measurement;
@@ -109,6 +109,231 @@ async function checkRegisterGrowatt(registers, client) {
     return result;
 }
 exports.checkRegisterGrowatt = checkRegisterGrowatt;
+async function checkholdingRegisterSolax(registers, client) {
+    let result = {};
+    for (const [key, value] of Object.entries(registers)) {
+        try {
+            const res = client.readHoldingRegisters(value[0], value[1]);
+            const actualRes = await res;
+            // const metrics = actualRes.metrics;
+            // const request = actualRes.request;
+            const response = actualRes.response;
+            const measurement = {
+                value: 'xxx',
+                scale: value[4],
+                label: value[3],
+            };
+            let resultValue = 'xxx';
+            switch (value[2]) {
+                case 'UINT16':
+                    resultValue = response.body.valuesAsBuffer.readUInt16BE().toString();
+                    break;
+                case 'UINT32':
+                    resultValue = (response.body.valuesAsArray[1] << 16 | response.body.valuesAsArray[0]).toString();
+                    // resultValue = response.body.valuesAsBuffer.readUInt32LE().toString();
+                    break;
+                case 'STRING':
+                    resultValue = response.body.valuesAsBuffer.toString();
+                    break;
+                case 'INT16':
+                    resultValue = response.body.valuesAsBuffer.readInt16BE().toString();
+                    break;
+                case 'INT32':
+                    resultValue = ((response.body.valuesAsArray[1] << 16 | response.body.valuesAsArray[0]) | 0).toString();
+                    // resultValue = response.body.valuesAsBuffer.readInt32LE().toString();
+                    break;
+                default:
+                    console.log(key + ": type not found " + value[2]);
+                    break;
+            }
+            if (resultValue && resultValue !== undefined) {
+                measurement.value = resultValue;
+            }
+            result[key] = measurement;
+        }
+        catch (err) {
+            console.log("error with key: " + key);
+            // console.log(err);
+        }
+    }
+    console.log('checkRegister result');
+    return result;
+}
+exports.checkholdingRegisterSolax = checkholdingRegisterSolax;
+async function checkinputRegisterSolax(registers, client) {
+    let result = {};
+    for (const [key, value] of Object.entries(registers)) {
+        try {
+            const res = client.readInputRegisters(value[0], value[1]);
+            const actualRes = await res;
+            // const metrics = actualRes.metrics;
+            // const request = actualRes.request;
+            const response = actualRes.response;
+            const measurement = {
+                value: 'xxx',
+                scale: value[4],
+                label: value[3],
+            };
+            let resultValue = 'xxx';
+            switch (value[2]) {
+                case 'UINT16':
+                    resultValue = response.body.valuesAsBuffer.readUInt16BE().toString();
+                    break;
+                case 'UINT32':
+                    resultValue = (response.body.valuesAsArray[1] << 16 | response.body.valuesAsArray[0]).toString();
+                    // resultValue = response.body.valuesAsBuffer.readUInt32LE().toString();
+                    break;
+                case 'STRING':
+                    resultValue = response.body.valuesAsBuffer.toString();
+                    break;
+                case 'INT16':
+                    resultValue = response.body.valuesAsBuffer.readInt16BE().toString();
+                    break;
+                case 'INT32':
+                    resultValue = ((response.body.valuesAsArray[1] << 16 | response.body.valuesAsArray[0]) | 0).toString();
+                    // resultValue = response.body.valuesAsBuffer.readInt32LE().toString();
+                    break;
+                default:
+                    console.log(key + ": type not found " + value[2]);
+                    break;
+            }
+            if (resultValue && resultValue !== undefined) {
+                measurement.value = resultValue;
+            }
+            result[key] = measurement;
+        }
+        catch (err) {
+            console.log("error with key: " + key);
+            // console.log(err);
+        }
+    }
+    console.log('checkRegister result');
+    return result;
+}
+exports.checkinputRegisterSolax = checkinputRegisterSolax;
+async function checkHoldingRegisterWattsonic(registers, client) {
+    let result = {};
+    for (const [key, value] of Object.entries(registers)) {
+        try {
+            const res = client.readHoldingRegisters(value[0], value[1]);
+            const actualRes = await res;
+            // const metrics = actualRes.metrics;
+            // const request = actualRes.request;
+            const response = actualRes.response;
+            const measurement = {
+                value: 'xxx',
+                scale: value[4],
+                label: value[3],
+            };
+            let resultValue = 'xxx';
+            switch (value[2]) {
+                case 'UINT16':
+                    resultValue = response.body.valuesAsBuffer.readUInt16BE().toString();
+                    break;
+                case 'UINT32':
+                    resultValue = response.body.valuesAsBuffer.readUInt32BE().toString();
+                    break;
+                case 'ACC32':
+                    resultValue = response.body.valuesAsBuffer.readUInt32BE().toString();
+                    break;
+                case 'FLOAT':
+                    resultValue = response.body.valuesAsBuffer.readFloatBE().toString();
+                    break;
+                case 'STRING':
+                    resultValue = response.body.valuesAsBuffer.toString();
+                    break;
+                case 'INT16':
+                    resultValue = response.body.valuesAsBuffer.readInt16BE().toString();
+                    break;
+                case 'INT32':
+                    resultValue = response.body.valuesAsBuffer.readInt32BE().toString();
+                    break;
+                case 'FLOAT32':
+                    resultValue = response.body.valuesAsBuffer.swap16().swap32().readFloatBE().toString();
+                    break;
+                default:
+                    console.log(key + ": type not found " + value[2]);
+                    break;
+            }
+            if (resultValue && resultValue !== undefined) {
+                measurement.value = resultValue;
+            }
+            result[key] = measurement;
+        }
+        catch (err) {
+            console.log("error with key: " + key);
+            // console.log(err);
+        }
+    }
+    console.log('checkRegister result');
+    return result;
+}
+exports.checkHoldingRegisterWattsonic = checkHoldingRegisterWattsonic;
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+async function checkHoldingRegisterHuawei(registers, client) {
+    let result = {};
+    for (const [key, value] of Object.entries(registers)) {
+        await delay(250);
+        try {
+            const res = client.readHoldingRegisters(value[0], value[1]);
+            const actualRes = await res;
+            // const metrics = actualRes.metrics;
+            // const request = actualRes.request;
+            const response = actualRes.response;
+            const measurement = {
+                value: 'xxx',
+                scale: value[4],
+                label: value[3],
+            };
+            let resultValue = 'xxx';
+            switch (value[2]) {
+                case 'STRING':
+                    resultValue = response.body.valuesAsBuffer.toString();
+                    break;
+                case 'UINT16':
+                    resultValue = response.body.valuesAsBuffer.readUInt16BE().toString();
+                    break;
+                case 'UINT32':
+                    resultValue = response.body.valuesAsBuffer.readUInt32BE().toString();
+                    break;
+                case 'ACC32':
+                    resultValue = response.body.valuesAsBuffer.readUInt32BE().toString();
+                    break;
+                case 'FLOAT':
+                    resultValue = response.body.valuesAsBuffer.readFloatBE().toString();
+                    break;
+                case 'STRING':
+                    resultValue = response.body.valuesAsBuffer.toString();
+                    break;
+                case 'INT16':
+                    resultValue = response.body.valuesAsBuffer.readInt16BE().toString();
+                    break;
+                case 'INT32':
+                    resultValue = response.body.valuesAsBuffer.readInt32BE().toString();
+                    break;
+                case 'FLOAT32':
+                    resultValue = response.body.valuesAsBuffer.swap16().swap32().readFloatBE().toString();
+                    break;
+                default:
+                    console.log(key + ": type not found " + value[2]);
+                    break;
+            }
+            if (resultValue && resultValue !== undefined) {
+                measurement.value = resultValue;
+            }
+            result[key] = measurement;
+        }
+        catch (err) {
+            console.log("error with key: " + key);
+            console.log(err);
+        }
+    }
+    console.log('checkRegister result');
+    return result;
+}
+exports.checkHoldingRegisterHuawei = checkHoldingRegisterHuawei;
 async function checkHoldingRegisterGrowatt(registers, client) {
     let result = {};
     for (const [key, value] of Object.entries(registers)) {
@@ -137,7 +362,7 @@ async function checkHoldingRegisterGrowatt(registers, client) {
                     console.log(key + ": type not found " + value[2]);
                     break;
             }
-            if (resultValue) {
+            if (resultValue && resultValue !== undefined) {
                 measurement.value = resultValue;
             }
             result[key] = measurement;
@@ -151,6 +376,104 @@ async function checkHoldingRegisterGrowatt(registers, client) {
     return result;
 }
 exports.checkHoldingRegisterGrowatt = checkHoldingRegisterGrowatt;
+async function checkRegisterSungrow(registers, client) {
+    let result = {};
+    for (const [key, value] of Object.entries(registers)) {
+        try {
+            const res = client.readInputRegisters(value[0], value[1]);
+            const actualRes = await res;
+            // const metrics = actualRes.metrics;
+            // const request = actualRes.request;
+            const response = actualRes.response;
+            const measurement = {
+                value: 'xxx',
+                scale: value[4],
+                label: value[3],
+            };
+            let resultValue = 'xxx';
+            switch (value[2]) {
+                case 'UINT16':
+                    resultValue = response.body.valuesAsBuffer.readUInt16BE().toString();
+                    break;
+                case 'UINT32':
+                    resultValue = (response.body.valuesAsArray[1] << 16 | response.body.valuesAsArray[0]).toString();
+                    break;
+                case 'STRING':
+                    resultValue = response.body.valuesAsBuffer.toString();
+                    break;
+                case 'INT16':
+                    resultValue = response.body.valuesAsBuffer.readInt16BE().toString();
+                    break;
+                case 'INT32':
+                    resultValue = ((response.body.valuesAsArray[1] << 16 | response.body.valuesAsArray[0]) | 0).toString();
+                    break;
+                default:
+                    console.log(key + ": type not found " + value[2]);
+                    break;
+            }
+            if (resultValue && resultValue !== undefined) {
+                measurement.value = resultValue;
+            }
+            result[key] = measurement;
+        }
+        catch (err) {
+            console.log("error with key: " + key);
+            // console.log(err);
+        }
+    }
+    console.log('checkRegister result');
+    return result;
+}
+exports.checkRegisterSungrow = checkRegisterSungrow;
+async function checkHoldingRegisterSungrow(registers, client) {
+    let result = {};
+    for (const [key, value] of Object.entries(registers)) {
+        try {
+            const res = client.readHoldingRegisters(value[0], value[1]);
+            const actualRes = await res;
+            // const metrics = actualRes.metrics;
+            // const request = actualRes.request;
+            const response = actualRes.response;
+            const measurement = {
+                value: 'xxx',
+                scale: value[4],
+                label: value[3],
+            };
+            let resultValue = 'xxx';
+            switch (value[2]) {
+                case 'UINT16':
+                    resultValue = response.body.valuesAsBuffer.readUInt16BE().toString();
+                    break;
+                case 'UINT32':
+                    resultValue = (response.body.valuesAsArray[1] << 16 | response.body.valuesAsArray[0]).toString();
+                    break;
+                case 'STRING':
+                    resultValue = response.body.valuesAsBuffer.toString();
+                    break;
+                case 'INT16':
+                    resultValue = response.body.valuesAsBuffer.readInt16BE().toString();
+                    break;
+                case 'INT32':
+                    resultValue = ((response.body.valuesAsArray[1] << 16 | response.body.valuesAsArray[0]) | 0).toString();
+                    break;
+                default:
+                    console.log(key + ": type not found " + value[2]);
+                    break;
+            }
+            if (resultValue && resultValue !== undefined) {
+                measurement.value = resultValue;
+            }
+            result[key] = measurement;
+        }
+        catch (err) {
+            console.log("error with key: " + key);
+            // console.log(err);
+        }
+    }
+    console.log('checkHoldingRegister result');
+    return result;
+}
+exports.checkHoldingRegisterSungrow = checkHoldingRegisterSungrow;
 async function checkMeter(meter_dids, meter_registers, client) {
     let result = {};
     for (const [key, value] of Object.entries(meter_dids)) {

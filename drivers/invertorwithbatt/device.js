@@ -43,10 +43,26 @@ class MySolaredgeBatteryDevice extends solaredge_1.Solaredge {
         // homey menu / device actions
         this.registerCapabilityListener('storagecontrolmode', async (value) => {
             this.updateControl('storagecontrolmode', Number(value), this);
+            let tokens = {
+                "mode": Number(value)
+            };
+            let state = {};
+            console.log('trigger changedStoragecontrolmode ' + value);
+            this.homey.flow.getDeviceTriggerCard('changedStoragecontrolmode').trigger(this, tokens, state);
+            return value;
+        });
+        this.registerCapabilityListener('storageacchargepolicy', async (value) => {
+            this.updateControl('storageacchargepolicy', Number(value), this);
             return value;
         });
         this.registerCapabilityListener('storagedefaultmode', async (value) => {
             this.updateControl('storagedefaultmode', Number(value), this);
+            let tokens = {
+                "mode": Number(value)
+            };
+            let state = {};
+            console.log('trigger changedStoragedefaultmode ' + value);
+            this.homey.flow.getDeviceTriggerCard('changedStoragedefaultmode').trigger(this, tokens, state);
             return value;
         });
         this.registerCapabilityListener('limitcontrolmode', async (value) => {
@@ -217,109 +233,23 @@ class MySolaredgeBatteryDevice extends solaredge_1.Solaredge {
             // https://www.rapidtables.com/convert/number/hex-to-decimal.html
             console.log('Connected ...');
             if (type == 'chargelimit') {
-                var chargehex1 = 16384;
-                var chargehex2 = 17820;
-                //chargepower
-                if (value == 0) {
-                    chargehex1 = 0;
-                    chargehex2 = 0;
-                }
-                else if (value == 500) {
-                    chargehex1 = 0;
-                    chargehex2 = 17402;
-                }
-                else if (value == 1000) {
-                    chargehex1 = 0;
-                    chargehex2 = 17530;
-                }
-                else if (value == 1500) {
-                    chargehex1 = 32768;
-                    chargehex2 = 17595;
-                }
-                else if (value == 2000) {
-                    chargehex1 = 0;
-                    chargehex2 = 17658;
-                }
-                else if (value == 2500) {
-                    chargehex1 = 16384;
-                    chargehex2 = 17692;
-                }
-                else if (value == 3000) {
-                    chargehex1 = 32768;
-                    chargehex2 = 17723;
-                }
-                else if (value == 4000) {
-                    chargehex1 = 0;
-                    chargehex2 = 17786;
-                }
-                else if (value == 5000) {
-                    chargehex1 = 16384;
-                    chargehex2 = 17820;
-                }
-                else if (value == 6600) {
-                    chargehex1 = 16384;
-                    chargehex2 = 17870;
-                }
-                const chargeRes = await client.writeMultipleRegisters(0xe00e, [chargehex1, chargehex2]);
+                let buffer;
+                buffer = Buffer.allocUnsafe(4);
+                buffer.writeFloatBE(value);
+                buffer.swap32().swap16();
+                let bytes = buffer.toString('hex').toUpperCase().replace(/(.{2})/g, "$1 ").trimEnd();
+                console.log("Write register: Bytes: " + bytes);
+                const chargeRes = await client.writeMultipleRegisters(0xe00e, buffer);
                 console.log('charge', chargeRes);
             }
             if (type == 'dischargelimit') {
-                var dischargehex1 = 16384;
-                var dischargehex2 = 17820;
-                //dischargepower
-                if (value == 0) {
-                    chargehex1 = 0;
-                    chargehex2 = 0;
-                }
-                else if (value == 10) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 16672;
-                }
-                else if (value == 50) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 16968;
-                }
-                else if (value == 100) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 17096;
-                }
-                else if (value == 500) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 17402;
-                }
-                else if (value == 1000) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 17530;
-                }
-                else if (value == 1500) {
-                    dischargehex1 = 32768;
-                    dischargehex2 = 17595;
-                }
-                else if (value == 2000) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 17658;
-                }
-                else if (value == 2500) {
-                    dischargehex1 = 16384;
-                    dischargehex2 = 17692;
-                }
-                else if (value == 3000) {
-                    dischargehex1 = 32768;
-                    dischargehex2 = 17723;
-                }
-                else if (value == 4000) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 17786;
-                }
-                else if (value == 5000) {
-                    dischargehex1 = 16384;
-                    dischargehex2 = 17820;
-                }
-                else if (value == 6600) {
-                    dischargehex1 = 16384;
-                    dischargehex2 = 17870;
-                }
-                const dischargeRes = await client.writeMultipleRegisters(0xe010, [dischargehex1, dischargehex2]);
+                let buffer;
+                buffer = Buffer.allocUnsafe(4);
+                buffer.writeFloatBE(value);
+                buffer.swap32().swap16();
+                let bytes = buffer.toString('hex').toUpperCase().replace(/(.{2})/g, "$1 ").trimEnd();
+                console.log("Write register: Bytes: " + bytes);
+                const dischargeRes = await client.writeMultipleRegisters(0xe010, buffer);
                 console.log('discharge', dischargeRes);
             }
             if (type == 'activepowerlimit') {
@@ -341,6 +271,13 @@ class MySolaredgeBatteryDevice extends solaredge_1.Solaredge {
                     const limitcontrolWattRes = await client.writeMultipleRegisters(0xe002, [32768, 17723]);
                     console.log('limitcontrolwatt', limitcontrolWattRes);
                 }
+                else if (value == 2) {
+                    const limitcontrolmodeeRes = await client.writeSingleRegister(0xe000, Number(4));
+                    console.log('limitcontrolmode', limitcontrolmodeeRes);
+                    // 500
+                    const limitcontrolWattRes = await client.writeMultipleRegisters(0xe002, [0, 17402]);
+                    console.log('limitcontrolwatt', limitcontrolWattRes);
+                }
                 else if (value == 11) {
                     const limitcontrolmodeeRes = await client.writeSingleRegister(0xe000, Number(2049));
                     console.log('limitcontrolmode', limitcontrolmodeeRes);
@@ -355,74 +292,14 @@ class MySolaredgeBatteryDevice extends solaredge_1.Solaredge {
             }
             if (type == 'exportlimit') {
                 // https://babbage.cs.qc.cuny.edu/ieee-754.old/Decimal.html
-                // https://www.rapidtables.com/convert/number/hex-to-decimal.html        
-                var dischargehex1 = 16384;
-                var dischargehex2 = 17820;
-                if (value == 0) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 0;
-                }
-                else if (value == 50) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 16968;
-                }
-                else if (value == 100) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 17096;
-                }
-                else if (value == 150) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 17174;
-                }
-                else if (value == 200) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 17224;
-                }
-                else if (value == 300) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 17302;
-                }
-                else if (value == 400) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 17352;
-                }
-                else if (value == 500) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 17402;
-                }
-                else if (value == 1000) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 17530;
-                }
-                else if (value == 1500) {
-                    dischargehex1 = 32768;
-                    dischargehex2 = 17595;
-                }
-                else if (value == 2000) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 17658;
-                }
-                else if (value == 2500) {
-                    dischargehex1 = 16384;
-                    dischargehex2 = 17692;
-                }
-                else if (value == 3000) {
-                    dischargehex1 = 32768;
-                    dischargehex2 = 17723;
-                }
-                else if (value == 4000) {
-                    dischargehex1 = 0;
-                    dischargehex2 = 17786;
-                }
-                else if (value == 5000) {
-                    dischargehex1 = 16384;
-                    dischargehex2 = 17820;
-                }
-                else if (value == 6600) {
-                    dischargehex1 = 16384;
-                    dischargehex2 = 17870;
-                }
-                const limitcontrolWattRes = await client.writeMultipleRegisters(0xe002, [dischargehex1, dischargehex2]);
+                // https://www.rapidtables.com/convert/number/hex-to-decimal.html
+                let buffer;
+                buffer = Buffer.allocUnsafe(4);
+                buffer.writeFloatBE(value);
+                buffer.swap32().swap16();
+                let bytes = buffer.toString('hex').toUpperCase().replace(/(.{2})/g, "$1 ").trimEnd();
+                console.log("Write register: Bytes: " + bytes);
+                const limitcontrolWattRes = await client.writeMultipleRegisters(0xe002, buffer);
                 console.log('limitcontrolwatt', limitcontrolWattRes);
             }
             if (type == 'storagecontrolmode') {
@@ -432,6 +309,14 @@ class MySolaredgeBatteryDevice extends solaredge_1.Solaredge {
                 // 4 – Remote Control – the battery charge/discharge state is controlled by an external controller
                 const storagecontrolmodeRes = await client.writeSingleRegister(0xe004, Number(value));
                 console.log('controlmodewrite', storagecontrolmodeRes);
+            }
+            if (type == 'storageacchargepolicy') {
+                // 0 – Disable
+                // 1 – Always allowed – needed for AC coupling operation. Allows unlimited charging from the AC. When used with Maximize self-consumption, only excess power is used for charging (charging from the grid is not allowed).
+                // 2 – Fixed Energy Limit – allows AC charging with a fixed yearly (Jan 1 to Dec 31) limit (needed for meeting ITC regulation in the US)
+                // 3 – Percent of Production - allows AC charging with a % of system production year to date limit (needed for meeting ITC regulation in the US)
+                const storageacchargepolicyRes = await client.writeSingleRegister(0xe005, Number(value));
+                console.log('storageacchargepolicy', storageacchargepolicyRes);
             }
             if (type == 'storagedefaultmode') {
                 const storagedefaultmodeRes = await client.writeSingleRegister(0xe004, Number(4));
@@ -490,7 +375,7 @@ class MySolaredgeBatteryDevice extends solaredge_1.Solaredge {
         };
         let socket = new net_1.default.Socket();
         var unitID = this.getSetting('id');
-        let client = new Modbus.client.TCP(socket, unitID);
+        let client = new Modbus.client.TCP(socket, unitID, 1000);
         socket.setKeepAlive(false);
         socket.connect(modbusOptions);
         console.log(modbusOptions);
@@ -504,7 +389,7 @@ class MySolaredgeBatteryDevice extends solaredge_1.Solaredge {
             client.socket.end();
             socket.end();
             const finalRes = { ...checkRegisterRes, ...checkMeterRes, ...checkBatteryRes };
-            this.processResult(finalRes);
+            this.processResult(finalRes, this.getSetting('maxpeakpower'));
             const endTime = new Date();
             const timeDiff = endTime.getTime() - startTime.getTime();
             let seconds = Math.floor(timeDiff / 1000);

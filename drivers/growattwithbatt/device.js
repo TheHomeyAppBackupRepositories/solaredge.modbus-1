@@ -87,18 +87,6 @@ class MyGrowattBattery extends growatt_1.Growatt {
             this.updateControl('exportlimitpowerrate', value);
             return value;
         });
-        // flow action 
-        let solarchargeStatus = this.homey.flow.getConditionCard("solarcharge");
-        solarchargeStatus.registerRunListener(async (args, state) => {
-            let result = (await this.getCapabilityValue('measure_power') >= args.charging);
-            return Promise.resolve(result);
-        });
-        // // flow conditions
-        // let changedStatus = this.homey.flow.getConditionCard("changedStatus");
-        // changedStatus.registerRunListener(async (args, state) => {
-        //   let result = (await this.getCapabilityValue('invertorstatus') == args.argument_main);
-        //   return Promise.resolve(result);
-        // })  
         if (this.hasCapability('priority') === false) {
             await this.addCapability('priority');
         }
@@ -134,6 +122,12 @@ class MyGrowattBattery extends growatt_1.Growatt {
         }
         if (this.hasCapability('battacchargeswitch') === false) {
             await this.addCapability('battacchargeswitch');
+        }
+        if (this.hasCapability('measure_power.import') === false) {
+            await this.addCapability('measure_power.import');
+        }
+        if (this.hasCapability('measure_power.export') === false) {
+            await this.addCapability('measure_power.export');
         }
     }
     /**
@@ -273,7 +267,7 @@ class MyGrowattBattery extends growatt_1.Growatt {
     async updateControlProfile(type, hourstart, minstart, hourstop, minstop, enabled) {
         let socket = new net_1.default.Socket();
         var unitID = this.getSetting('id');
-        let client = new Modbus.client.TCP(socket, unitID);
+        let client = new Modbus.client.TCP(socket, unitID, 500);
         let modbusOptions = {
             'host': this.getSetting('address'),
             'port': this.getSetting('port'),
@@ -366,7 +360,7 @@ class MyGrowattBattery extends growatt_1.Growatt {
         };
         let socket = new net_1.default.Socket();
         var unitID = this.getSetting('id');
-        let client = new Modbus.client.TCP(socket, unitID);
+        let client = new Modbus.client.TCP(socket, unitID, 1000);
         socket.setKeepAlive(false);
         socket.connect(modbusOptions);
         socket.on('connect', async () => {
@@ -378,7 +372,7 @@ class MyGrowattBattery extends growatt_1.Growatt {
             client.socket.end();
             socket.end();
             const finalRes = { ...checkRegisterRes, ...checkHoldingRegisterRes };
-            this.processResult(finalRes);
+            this.processResult(finalRes, this.getSetting('maxpeakpower'));
         });
         socket.on('close', () => {
             console.log('Client closed');
